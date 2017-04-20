@@ -1,5 +1,32 @@
 # CS223-loggingService
 
+__Team: YYY__
+
+Yue Ding  20809476  
+Shengnan Wang 83682456  
+Shayang Zang  36326408  
+
+__Goal:__
+
+This project will implement a logging service accepting logging message in various formats, such as XML, JSON, Plain Text, Binary. We will provide our client with APIs that include “write log into memory”, “delete log” and “flush log onto disk”.
+
+Specifically, we will use:  
+1. Maven to manage the entire project.  
+2. Google Guice to facilitate the building of dependency injection pattern so that different classes, depending on the format of the incoming logging message, can be dynamically loaded.
+3. Apache Geode to manage data in memory.
+4. MySQL/PostgreSQL to manage data on disk.
+
+__Procedure Description:__
+
+Client invoke logging handlers through our APIs, corresponding logging message files are first  converted to java beans and then stored in memory. Upon flush, they will go to database.
+
+__Timeline:__
+
+W4: Get ourselves familiar with what each framework/library/package does.  
+W5: Start to build the logging service.  
+W6: Finish the implementation such that our system can work with at least one payload format.  
+W7: Extend it to accept various types of payload format.  
+
 
 ### Concept
 
