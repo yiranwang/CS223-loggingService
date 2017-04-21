@@ -62,3 +62,5 @@ _A use-case is application frameworks and containers which typically use Class.f
 ### Tutorials
 
 1. [Generate JAXB Java classes from XSD with maven-jaxb2-plugin AND Spring OXM JAXB Example](https://www.youtube.com/watch?v=0D-P2LzLJYQ)
+
+2. [Injecting Single Interface Implementation with Google Guice](https://www.youtube.com/watch?v=wNclLOTxQjk&list=PLKiN3faYVq89TjVuba-F62_nKBpcFdOWz&index=2)
