@@ -34,34 +34,44 @@ W7: Extend it to accept various types of payload format.
 
 
 Client initiates the logging of a transaction by calling: __txid = init_logging()__  
-Input:
+Input:  
 * none  
-Output:
-* transaction ID   
+Output:  
+* txid : INT : transaction ID   
 
 _transaction IDs are a series of monotonically increasing numbers unique to each transaction. Most DBMS has SEQUENCE.nextval() that can generate such numbers._  
 
 ---
 
-Client writes each log into memory by calling: __lsn = log(txid, content, format)__
+Client writes each log into memory by calling: __lsn = log(txid, content, format)__  
 Input:  
-* txid: transaction ID
-* content: String
-* format: xml, json, plain text, binary
+* txid : INT : transaction ID   
+* content : STRING : logging content
+* format : STRING : xml, json, plain text, binary
 Output:  
-* lsn: log sequential number
+* lsn : INT : log sequential number
 
 _maintain logs within the same transaction using doubly linkedlist._
 
 ---
 
-Client flush the logging content from memory to disk by calling: __retcode = flush(txid)__
+Client flush the logging content from memory to disk by calling: __retcode = flush(txid)__  
 Input:
-* txid: transaction ID
+* txid : INT : transaction ID   
 Output:
-* retcode: return 0 if successful, else 1.
+* retcode : INT : return 0 if successful, else 1.
 
 ---
+
+## Development
+
+1. How to generate unique transaction ID and log sequntial number using DB.sequence.nextval() in java?
+
+2. How to build JavaBeans from various types of content and XSD schema?
+
+3. How to implement data transfer from memory to disk?
+
+
 
 ### Concept
 
