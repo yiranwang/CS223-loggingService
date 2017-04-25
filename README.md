@@ -1,5 +1,7 @@
 # CS223-loggingService
 
+## Proposal
+
 __Team: YYY__
 
 Yue Ding  20809476  
@@ -27,6 +29,39 @@ W5: Start to build the logging service.
 W6: Finish the implementation such that our system can work with at least one payload format.  
 W7: Extend it to accept various types of payload format.  
 
+
+## APIs
+
+
+Client initiates the logging of a transaction by calling: __txid = init_logging()__  
+Input:
+* none  
+Output:
+* transaction ID   
+
+_transaction IDs are a series of monotonically increasing numbers unique to each transaction. Most DBMS has SEQUENCE.nextval() that can generate such numbers._  
+
+---
+
+Client writes each log into memory by calling: __lsn = log(txid, content, format)__
+Input:  
+* txid: transaction ID
+* content: String
+* format: xml, json, plain text, binary
+Output:  
+* lsn: log sequential number
+
+_maintain logs within the same transaction using doubly linkedlist._
+
+---
+
+Client flush the logging content from memory to disk by calling: __retcode = flush(txid)__
+Input:
+* txid: transaction ID
+Output:
+* retcode: return 0 if successful, else 1.
+
+---
 
 ### Concept
 
