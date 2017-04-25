@@ -73,9 +73,11 @@ Output:
 
 1. How to generate unique transaction ID and log sequntial number using DB.sequence.nextval() in java?
 
-2. How to build JavaBeans from various types of content and XSD schema?
+2. How to build JavaBeans from XML and XSD schema? How to apply Guice for dependency injection with multiple classes?
 
-3. How to implement data transfer from memory to disk?
+3. How to build JavaBeans from content of JSON, pt, bin format?
+
+4. How to implement data transfer from memory to disk?
 
 
 
