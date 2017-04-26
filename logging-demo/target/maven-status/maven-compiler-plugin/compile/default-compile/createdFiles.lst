@@ -1,0 +1,8 @@
+com/yyy/tippers/logging/Demo.class
+com/yyy/tippers/logging/factory/Handlerable.class
+com/yyy/tippers/logging/factory/HandlerGuiceModule.class
+com/yyy/tippers/logging/factory/HandlerFactory.class
+com/yyy/tippers/logging/LoggingService.class
+com/yyy/tippers/logging/factory/LoggingHandlerFactory.class
+com/yyy/tippers/logging/handlers/HandlerForJSON.class
+com/yyy/tippers/logging/handlers/HandlerForXML.class
