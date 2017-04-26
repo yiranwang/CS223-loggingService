@@ -1,7 +1,8 @@
 package com.yyy.tippers.logging.factory;
 
 /**
- * Created by shayangzang on 4/25/17.
+   This is a factory-level interface.
+   We want it so that we don't need to specify "what type of factory" I want when LoggingService is instantiated.
  */
 
 

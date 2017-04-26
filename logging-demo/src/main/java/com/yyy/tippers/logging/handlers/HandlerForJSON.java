@@ -9,7 +9,8 @@ import com.yyy.tippers.logging.factory.Handlerable;
 public class HandlerForJSON implements Handlerable {
 
     @Override
-    public String handlerType() {
-        return "<JSON-Handler>";
+    public void showType() {
+        System.out.println("<JSON-Handler>");
+        return ;
     }
 }

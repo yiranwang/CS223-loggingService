@@ -1,8 +1,8 @@
 package com.yyy.tippers.logging.factory;
 
-/**
- * Created by shayangzang on 4/25/17.
+/*
+  This Handlerable interface is defined so that we don't need to specify "what type of handler" we want in COMPILE time.
  */
 public interface Handlerable {
-    String handlerType();
+    void showType();
 }

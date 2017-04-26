@@ -9,8 +9,9 @@ import com.yyy.tippers.logging.factory.Handlerable;
 public class HandlerForXML implements Handlerable {
 
     @Override
-    public String handlerType() {
-        return "<XML-Handler>";
+    public void showType() {
+        System.out.println("<XML-Handler>");
+        return ;
     }
 
 }
