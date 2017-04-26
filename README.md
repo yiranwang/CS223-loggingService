@@ -30,56 +30,114 @@ W6: Finish the implementation such that our system can work with at least one pa
 W7: Extend it to accept various types of payload format.  
 
 
-## APIs
+## Tentative APIs
 
+__LastUpdate: 04262017__  
 
-Clients initiate the logging of a transaction by calling: __txid = init_logging()__  
+__"loggingService" is a privately attached member of the application.__
+
+Clients initiate the logging of a transaction by calling: __txid = loggingService.newTransaction()__  
 
 Input:  
 * none  
 
 Output:  
-* txid : INT : transaction ID   
+* txid : AtomicInteger : transaction ID   
 
 _transaction IDs are a series of monotonically increasing numbers unique to each transaction. Most DBMS has SEQUENCE.nextval() that can generate such numbers._  
 
 ---
 
-Clients write each log into memory by calling: __lsn = log(txid, content, format)__  
+Clients write each log into memory by calling: __loggingService.writeLog(txid, content, format)__  
 
 Input:  
-* txid : INT : transaction ID   
+* txid : AtomicInteger : transaction ID   
 * content : STRING : logging content
 * format : STRING : xml, json, plain text, binary
 
-Output:  
+Current Output:  
+* retcode : INT : 0 indicating success. 1 otherwise.
+
+Potential Output:  
 * lsn : INT : log sequential number
 
 _maintain logs within the same transaction using doubly linkedlist._
 
 ---
 
-Clients flush the logging content from memory to disk by calling: __retcode = flush(txid)__  
+Clients flush the logging content from memory to disk by calling: __loggingService.flushLog(txid)__  
 
 Input:
-* txid : INT : transaction ID
+* txid : AtomicInteger : transaction ID
 
 Output:
-* retcode : INT : return 0 if successful, else 1.
+* retcode : INT : 0 indicating success. 1 otherwise.
 
 ---
 
 ## Development
 
-1. How to generate unique transaction ID and log sequntial number using DB.sequence.nextval() in java?
+### Where to start?
 
+__LastUpdate: 04252017__  
+1. How to generate unique transaction ID and log sequential number using DB.sequence.nextval() in java?
 2. How to build JavaBeans from XML and XSD schema? How to apply Guice for dependency injection with multiple classes?
-
 3. How to build JavaBeans from content of JSON, pt, bin format?
-
 4. How to implement data transfer from memory to disk?
 
 
+__LastUpdate: 04262017__    
+1. transaction ID comes from on-disk DB and LSN comes from in-memory counter
+2. WRITE input TO in-memory database and then FLUSH TO on disk database, do we still need a Transaction class to hold info?
+
+
+---
+
+### Dependency Injection Layout
+
+__LastUpdate: 04262017__  
+
+__src/../logging/Demo:__  
+A "fake" application class that mimics the application behavior specific to calling logging services. A LoggingService instance is privately attached to emit different behaviors given different input in RUNTIME.  
+
+__src/../logging/LoggingService:__  
+A "central" class that defines APIs, such as newTransaction(), writeLog(), flushLog(), etc. To behave differently in response to different input in RUNTIME, a LoggingHandlerFactory instance is privately attached.  
+
+__src/../logging/factory/LoggingHandlerFactory:__  
+A "factory" class that defines the conditional logic of producing different handlers in RUNTIME so they can emit different behaviors. The mapping of different input to different output (handlers) is privately attached as an attribute here but remotely defined in HandlerGuiceModule.
+
+__src/../logging/HandlerGuiceModule:__
+A "configure" class whose instance holds "configuration" in terms of:  
+1. Injectable: mapBinder, injecting mapping relations of different input to different handler classes, to LoggingHandlerFactory.
+2. bind(HandlerFactory.class).to(LoggingHandlerFactory.class) so it can be compiled with HandlerFactory interface and executed with LoggingHandlerFactory instance at RUNTIME.
+
+__src/../logging/factory/HandlerFactory:__  
+An factory interface, defines unspecified factory-level behavior at COMPILE time.  
+
+__src/../logging/factory/Handlerable:__
+An handler interface, defines unspecified handler-level behavior at COMPILE time.  
+
+__src/../logging/handlers/HandlerForXML:__
+A "handler" class that implemets Handlerable with specific behavior tailored to a certain type of RUNTIME parameter.
+
+__src/../logging/handlers/HandlerForJSON:__  
+A "handler" class that implemets Handlerable with specific behavior tailored to a certain type of RUNTIME parameter.  
+
+...
+
+
+### DB
+
+Yue Ding
+
+### Handlers
+
+Shengnan Wang
+
+
+## Prepare
+
+__LastUpdate: 04212017__  
 
 ### Concept
 
