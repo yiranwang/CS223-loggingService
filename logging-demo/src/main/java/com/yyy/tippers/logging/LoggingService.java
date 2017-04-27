@@ -49,6 +49,7 @@ public class LoggingService {
         // with runtime input, make handlerFactory concrete.
         // Now different handlers are available
         Handlerable handler = handlerFactory.getHandler(format);
+        handler.parse(content);
 
         // To test dependency injection
         handler.showType();

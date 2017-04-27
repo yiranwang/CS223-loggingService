@@ -14,4 +14,9 @@ public class HandlerForXML implements Handlerable {
         return ;
     }
 
+    public void parse(String content){
+        return;
+
+    }
+
 }
