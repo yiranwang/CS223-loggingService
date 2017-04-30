@@ -11,6 +11,9 @@ public class HandlerForJSON implements Handlerable {
     @Override
     public void showType() {
         System.out.println("<JSON-Handler>");
-        return ;
+
+    }
+    public void parse(String content){
+        return;
     }
 }

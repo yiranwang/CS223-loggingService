@@ -30,11 +30,11 @@ public class Demo
         takes in a String variable at the RUNTIME (when loggingService is running) and makes it behave differently.
      */
 
-    private void start() {
+    private void start(String content, String format) {
 
         AtomicInteger txid = loggingService.newTransaction();
-        loggingService.writeLog(txid, "XML_content", "XML");
-        loggingService.writeLog(txid, "JSON_content", "JSON");
+        loggingService.writeLog(txid, content, format);
+//        loggingService.writeLog(txid, "JSON_content", "JSON");
         loggingService.flushLog(txid);
     }
 
@@ -50,8 +50,17 @@ public class Demo
 
         Injector guice = Guice.createInjector(new HandlerGuiceModule());
         Demo demo = guice.getInstance(Demo.class);
-        demo.start();
-
+        String xmlContent = "<?xml version=\"1.0\"?>\n" +
+                "<employee\n" +
+                "        xmlns=\"http://www.javatpoint.com\"\n" +
+                "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "        xsi:schemaLocation=\"http://www.javatpoint.com employee.xsd\">\n" +
+                "\n" +
+                "    <firstname>vimal</firstname>\n" +
+                "    <lastname>jaiswal</lastname>\n" +
+                "    <email>vimal@javatpoint.com</email>\n" +
+                "</employee>";
+        demo.start(xmlContent, "XML");
         System.out.println( "End." );
 
     }
