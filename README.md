@@ -132,9 +132,10 @@ A "handler" class that implemets Handlerable with specific behavior tailored to 
 Yue Ding
 
 ### Handlers
-
-Shengnan Wang
-
+1. Unmarshall XML to java class. Here, we use two xsds and two xmls(src/main/reources): one is emplyee and the other is shiporder.  
+a. First delete the target/generated-sources/xjc folder. You will generate it later.  
+b. in pom.xml, there is plugin of jaxb to generate the java class from the XSD(schema). Right click pom.xml-->maven-->Reimport. Then Right click pom.xml --> maven--> generate the sources and update folders. After these steps, in target/generated-sources/xjc, you will see the class folders: one is about the employee class, the other is about the shiporder class.  
+c. Unmarshall the xml file using the generated data.  
 
 ## Prepare
 

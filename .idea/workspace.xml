@@ -1,44 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4efd5584-9465-426a-88be-555953541baf" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/javatpoint/Employee.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/javatpoint/ObjectFactory.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/javatpoint/package-info.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/shiporder/data/ObjectFactory.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/shiporder/data/Shiporder$Item.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/shiporder/data/Shiporder$Shipto.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/shiporder/data/Shiporder.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/shiporder/data/package-info.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/handlers/UnmarshallXMLClass.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/UnmarshallXMLClass.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/src/main/resources/Employee.xsd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/src/main/resources/employee.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/src/main/resources/shiporder.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/src/main/resources/shiporder.xsd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/Employee.xsd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/META-INF/sun-jaxb.episode" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/employee.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/shiporder.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/classes/shiporder.xsd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/generated-sources/xjc/META-INF/sun-jaxb.episode" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/generated-sources/xjc/com/javatpoint/Employee.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/generated-sources/xjc/com/javatpoint/ObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/generated-sources/xjc/com/javatpoint/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/generated-sources/xjc/com/shiporder/data/ObjectFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/generated-sources/xjc/com/shiporder/data/Shiporder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/logging-demo/target/generated-sources/xjc/com/shiporder/data/package-info.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/Demo.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/Demo.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/LoggingService.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/LoggingService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/factory/Handlerable.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/factory/Handlerable.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/handlers/HandlerForJSON.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/handlers/HandlerForJSON.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/handlers/HandlerForXML.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/handlers/HandlerForXML.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/logging-demo.iml" afterPath="$PROJECT_DIR$/logging-demo/logging-demo.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/pom.xml" afterPath="$PROJECT_DIR$/logging-demo/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/HandlerForJSON.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/HandlerForJSON.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/HandlerForXML.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/HandlerForXML.java" />
-    </list>
+    <list default="true" id="4efd5584-9465-426a-88be-555953541baf" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/logging-demo/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -300,6 +263,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -893,16 +860,16 @@
       <workItem from="1493305062212" duration="9814000" />
       <workItem from="1493510295749" duration="331000" />
       <workItem from="1493510638353" duration="3605000" />
-      <workItem from="1493587737549" duration="5188000" />
+      <workItem from="1493587737549" duration="5684000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="26239000" />
+    <option name="totallyTimeSpent" value="26735000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="34" y="23" width="1246" height="777" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -919,7 +886,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38704318" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38704318" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
