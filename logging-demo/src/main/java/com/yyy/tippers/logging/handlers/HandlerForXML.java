@@ -1,9 +1,5 @@
 package com.yyy.tippers.logging.handlers;
 
-/**
- * Created by shayangzang on 4/25/17.
- */
-
 import com.javatpoint.Employee;
 import com.yyy.tippers.logging.factory.Handlerable;
 import org.w3c.dom.Document;
@@ -23,6 +19,7 @@ public class HandlerForXML implements Handlerable {
         return ;
     }
 
+    @Override
     public void parse(String xmlContent) {
 
         String firstTagName = parseFirstTag(xmlContent);
@@ -43,8 +40,6 @@ public class HandlerForXML implements Handlerable {
             doc.getDocumentElement().normalize();
             Node rootNode = doc.getDocumentElement();
             firstTag = rootNode.getNodeName().toString();
-            System.out.println(firstTag);
-            UnmarshallXMLClass u = new UnmarshallXMLClass(firstTag, xmlContent);
 
         }catch(javax.xml.parsers.ParserConfigurationException e1){
             e1.printStackTrace();
@@ -58,6 +53,7 @@ public class HandlerForXML implements Handlerable {
             e4.printStackTrace();
         }
 
+        System.out.println(String.format("<HandlerForXML><parseFirstTag> $firstTag : %s", firstTag));
 
         return firstTag;
 

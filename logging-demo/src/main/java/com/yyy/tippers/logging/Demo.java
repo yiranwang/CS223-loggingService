@@ -30,11 +30,27 @@ public class Demo
         takes in a String variable at the RUNTIME (when loggingService is running) and makes it behave differently.
      */
 
-    private void start(String content, String format) {
+    private void start() {
 
         AtomicInteger txid = loggingService.newTransaction();
-        loggingService.writeLog(txid, content, format);
-//        loggingService.writeLog(txid, "JSON_content", "JSON");
+
+        String xmlContent = "<?xml version=\"1.0\"?>\n" +
+                "<employee\n" +
+                "        xmlns=\"http://www.javatpoint.com\"\n" +
+                "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "        xsi:schemaLocation=\"http://www.javatpoint.com employee.xsd\">\n" +
+                "\n" +
+                "    <firstname>vimal</firstname>\n" +
+                "    <lastname>jaiswal</lastname>\n" +
+                "    <email>vimal@javatpoint.com</email>\n" +
+                "</employee>";
+
+        String format = "XML";
+
+        loggingService.writeLog(txid, xmlContent, format);
+
+//        loggingService.writeLog(txid, "JSON_content", "JSON"); // for dependency injection testing only
+
         loggingService.flushLog(txid);
     }
 
@@ -50,17 +66,7 @@ public class Demo
 
         Injector guice = Guice.createInjector(new HandlerGuiceModule());
         Demo demo = guice.getInstance(Demo.class);
-        String xmlContent = "<?xml version=\"1.0\"?>\n" +
-                "<employee\n" +
-                "        xmlns=\"http://www.javatpoint.com\"\n" +
-                "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "        xsi:schemaLocation=\"http://www.javatpoint.com employee.xsd\">\n" +
-                "\n" +
-                "    <firstname>vimal</firstname>\n" +
-                "    <lastname>jaiswal</lastname>\n" +
-                "    <email>vimal@javatpoint.com</email>\n" +
-                "</employee>";
-        demo.start(xmlContent, "XML");
+        demo.start();
         System.out.println( "End." );
 
     }

@@ -51,8 +51,8 @@ public class LoggingService {
         Handlerable handler = handlerFactory.getHandler(format);
         handler.parse(content);
 
-        // To test dependency injection
-        handler.showType();
+
+        // handler.showType(); // To test dependency injection
 
         /*
           Todo: Shengnan, Shayang -> Implement HandlerForXML first, code resides in handlers package. Specifically: passing in txid, content and format, parse content and store them in in-mem DB.
