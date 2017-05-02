@@ -1,6 +1,6 @@
 package com.yyy.tippers.logging.handlers;
 
-import com.javatpoint.Employee;
+
 import com.yyy.tippers.logging.factory.Handlerable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -16,14 +16,18 @@ public class HandlerForXML implements Handlerable {
     @Override
     public void showType() {
         System.out.println("<XML-Handler>");
-        return ;
     }
 
     @Override
     public void parse(String xmlContent) {
 
-        String firstTagName = parseFirstTag(xmlContent);
-        UnmarshallXMLClass u = new UnmarshallXMLClass(firstTagName, xmlContent);
+        String firstTag = parseFirstTag(xmlContent);
+
+        UnmarshallXMLClass unmarshaller = new UnmarshallXMLClass(firstTag, xmlContent);
+
+        Object obj = unmarshaller.getObject();
+
+        System.out.println(String.format("<HandlerForXML><parse> - retrieved object from unmarshaller successful - $obj class : %s", obj.getClass()));
     }
 
     /**
@@ -39,7 +43,7 @@ public class HandlerForXML implements Handlerable {
             Document doc = db.parse(new ByteArrayInputStream(xmlContent.getBytes("UTF-8")));
             doc.getDocumentElement().normalize();
             Node rootNode = doc.getDocumentElement();
-            firstTag = rootNode.getNodeName().toString();
+            firstTag = rootNode.getNodeName();
 
         }catch(javax.xml.parsers.ParserConfigurationException e1){
             e1.printStackTrace();
@@ -53,7 +57,7 @@ public class HandlerForXML implements Handlerable {
             e4.printStackTrace();
         }
 
-        System.out.println(String.format("<HandlerForXML><parseFirstTag> $firstTag : %s", firstTag));
+        System.out.println(String.format("<HandlerForXML><parseFirstTag> - parsed input string - output - $firstTag : %s", firstTag));
 
         return firstTag;
 
