@@ -137,6 +137,26 @@ Unmarshall XML to java class. Here, we use two xsds and two xmls(src/main/reourc
 2. in pom.xml, there is plugin of jaxb to generate the java class from the XSD(schema). Right click pom.xml-->maven-->Reimport. Then Right click pom.xml --> maven--> generate the sources and update folders. After these steps, in target/generated-sources/xjc, you will see the class folders: one is about the employee class, the other is about the shiporder class.  
 3. Unmarshall the xml file using the generated data.  
 
+### Transaction Object Interface
+``` java
+// The following classes are defined in src/../loggingService/utils/
+
+public class TransactionLog {}
+
+TransactionLog transaction = new TransactionLog(AtomicInteger txid);
+boolean 0/1 = transaction.append(Object entryObj);
+AtomicInteger txid = transaction.getID();
+TransactionEntry firstEntry = transaction.getFirstEntry();
+TransactionEntry entry = transaction.getEntryNo(int lsn);
+
+public class TransactionEntry {}
+
+TransactionEntry nextEntry = entry.getNextEntry();
+TransactionEntry prevEntry = entry.getPrevEntry();
+Object logObj = entry.getEntryObject();
+
+```
+
 ## Prepare
 
 __LastUpdate: 04212017__  
