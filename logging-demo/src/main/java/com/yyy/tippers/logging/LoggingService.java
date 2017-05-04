@@ -72,6 +72,8 @@ public class LoggingService {
 
         //  Todo: Shengnan, Yue -> Store TransactionLog obj in Geode.
 
+
+
     }
 
     // this is just for demo purpose!

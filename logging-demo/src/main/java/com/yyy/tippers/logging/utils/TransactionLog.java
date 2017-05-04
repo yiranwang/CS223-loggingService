@@ -8,9 +8,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by shayangzang on 5/3/17.
  */
 
-public class TransactionLog {
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.gemfire.mapping.Region;
 
+@Region("hello")
+public class TransactionLog {
+    @Id
     private AtomicInteger txid;
+
     private int lsn = -1;
 
     private TransactionEntry head;
@@ -18,6 +24,7 @@ public class TransactionLog {
     private TransactionEntry pointer;
     private TransactionEntry curtEntry;
 
+    @PersistenceConstructor
     public TransactionLog(AtomicInteger txid) {
         this.pointer = null; // pointer set to search through the Linkedlist for particular entry
         this.curtEntry = null; // keep track of the last entry

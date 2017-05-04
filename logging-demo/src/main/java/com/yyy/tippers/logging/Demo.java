@@ -4,6 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.yyy.tippers.logging.Constant;
+import com.yyy.tippers.logging.utils.GeodeApplication;
+import org.springframework.boot.SpringApplication;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,6 +34,7 @@ public class Demo
      */
 
     private void start() {
+
 
         // Todo : Yue - need to implement this method asap so that multi-transaction behavior can be tested.
         AtomicInteger txid = loggingService.newTransaction();
@@ -63,6 +66,16 @@ public class Demo
 
         Injector guice = Guice.createInjector(new HandlerGuiceModule());
         Demo demo = guice.getInstance(Demo.class);
+
+        //start a the Geode to store the transaction
+        SpringApplication geoApp = new SpringApplication(GeodeApplication.class);
+        geoApp.setWebEnvironment(false);
+        String input="";
+        geoApp.run(input);
+
+
+
+
         demo.start();
         System.out.println( "End." );
 

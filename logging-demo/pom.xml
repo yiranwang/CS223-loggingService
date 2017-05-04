@@ -7,6 +7,25 @@
   <version>1.0-SNAPSHOT</version>
   <name>logging-demo</name>
   <url>http://maven.apache.org</url>
+
+  <!--for spring-->
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.5.3.RELEASE</version>
+  </parent>
+
+  <properties>
+    <java.version>1.8</java.version>
+    <spring-shell.version>1.0.0.RELEASE</spring-shell.version>
+  </properties>
+
+
+
+
+
+
   <dependencies>
 
 	<dependency>
@@ -34,6 +53,18 @@
       <version>4.1.0</version>
     </dependency>
 
+
+    <!--spring-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-gemfire</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.shell</groupId>
+      <artifactId>spring-shell</artifactId>
+      <version>${spring-shell.version}</version>
+      <scope>runtime</scope>
+    </dependency>
 
 
 
@@ -91,13 +122,23 @@
 
         </executions>
       </plugin>
+
+      <!--spring plugin-->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
     </plugins>
 
-
-
-
-
   </build>
+
+  <repositories>
+    <repository>
+      <id>spring-releases</id>
+      <url>https://repo.spring.io/libs-release</url>
+    </repository>
+  </repositories>
 
 
 
