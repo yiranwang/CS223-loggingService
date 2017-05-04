@@ -8,23 +8,32 @@ package com.yyy.tippers.logging;
 import com.google.inject.Inject;
 import com.yyy.tippers.logging.factory.Handlerable;
 import com.yyy.tippers.logging.factory.HandlerFactory;
+import com.yyy.tippers.logging.utils.TransactionEntry;
+import com.yyy.tippers.logging.utils.TransactionLog;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoggingService {
 
-    private final HandlerFactory handlerFactory;
+    private final HandlerFactory handlerFactory; // placeholder for the injected
+
+    private final Map<AtomicInteger, TransactionLog> transactionManager; // in memory mapping txid -> transaction
 
 
     /*
-      This constructor binds an handlerFactory instance with the LooggingService
-      HandlerFactory was an interface, implemented by "LoggingHandlerFactory" class, which is set to bind "HandlerFactory" in HandlerGuiceModule.java
-        Therefore, we can instantiate the "interface" directly here. But it is actually a LoggingHandlerFactory instance.
+      This constructor
+      1. binds an HandlerFactory instance with the LoggingService
+            HandlerFactory was an interface, implemented by "LoggingHandlerFactory" class, which is set to bind "HandlerFactory" in HandlerGuiceModule.java
+            Therefore, we can instantiate the "interface" directly here. But it is actually a LoggingHandlerFactory instance.
+      2. init transactionManager
      */
 
     @Inject
     public LoggingService(HandlerFactory handlerFactory) {
         this.handlerFactory = handlerFactory;
+        this.transactionManager = new HashMap<AtomicInteger, TransactionLog>();
     }
 
 
@@ -34,7 +43,8 @@ public class LoggingService {
 
     public AtomicInteger newTransaction() {
         AtomicInteger txid = new AtomicInteger(0);
-        // txid = db.SomeDataBaseClass.nextEntryIndex()
+        // txid = db.SomeDataBaseClass.nextEntryIndex() // it should always be unique
+        transactionManager.put(txid, new TransactionLog(txid));
         return txid;
     }
 
@@ -44,24 +54,35 @@ public class LoggingService {
       The condition logic is defined in the concrete class - LoggingHandlerFactory.java
      */
 
-    public int writeLog(AtomicInteger txid, String content, String format) {
+    public void writeLog(AtomicInteger txid, String content, String format) {
+        // with runtime input - txid, retrieve the transactionLog from transactionManager
+        TransactionLog txlg = transactionManager.get(txid);
 
-        // with runtime input, make handlerFactory concrete.
-        // Now different handlers are available
+        // with runtime input - format, generate specific and concrete handler.
         Handlerable handler = handlerFactory.getHandler(format);
-        handler.parse(content);
+
+        // unmarshal the input - content into log entry object
+        Object obj = handler.parse(content);
+
+        // put the entryObj into TransactionLog - a doublyLinkedList
+        int lsn = txlg.append(obj);
+
+        System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid.get()));
 
 
-        // handler.showType(); // To test dependency injection
+        //  Todo: Shengnan, Yue -> Store TransactionLog obj in Geode.
 
-        /*
-          Todo: Shengnan, Shayang -> Implement HandlerForXML first, code resides in handlers package. Specifically: passing in txid, content and format, parse content and store them in in-mem DB.
-         */
-
-
-        return 0; // signal success.
     }
 
+    // this is just for demo purpose!
+    // Not sure where the output goes, we need to discuss the scope of the query method.
+    public void queryLog(AtomicInteger txid) {
+        TransactionEntry entry = transactionManager.get(txid).getFirstEntry();
+        while (entry.hasNext()) {
+            System.out.println(entry.getEntryObject());
+            entry = entry.getNextEntry();
+        }
+    }
 
     public int flushLog(AtomicInteger txid) {
         /*

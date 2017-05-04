@@ -13,7 +13,7 @@ public class HandlerForJSON implements Handlerable {
         System.out.println("<JSON-Handler>");
 
     }
-    public void parse(String content){
-        return;
+    public Object parse(String content){
+        return 1;
     }
 }

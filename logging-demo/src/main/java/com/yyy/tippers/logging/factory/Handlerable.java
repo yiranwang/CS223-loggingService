@@ -5,5 +5,5 @@ package com.yyy.tippers.logging.factory;
  */
 public interface Handlerable {
     void showType();
-    void parse(String content);
+    Object parse(String content);
 }

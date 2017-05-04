@@ -3,6 +3,7 @@ package com.yyy.tippers.logging;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.yyy.tippers.logging.Constant;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,22 +33,18 @@ public class Demo
 
     private void start() {
 
+        // Todo : Yue - need to implement this method asap so that multi-transaction behavior can be tested.
         AtomicInteger txid = loggingService.newTransaction();
 
-        String xmlContent = "<?xml version=\"1.0\"?>\n" +
-                "<employee\n" +
-                "        xmlns=\"http://www.javatpoint.com\"\n" +
-                "        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "        xsi:schemaLocation=\"http://www.javatpoint.com employee.xsd\">\n" +
-                "\n" +
-                "    <firstname>vimal</firstname>\n" +
-                "    <lastname>jaiswal</lastname>\n" +
-                "    <email>vimal@javatpoint.com</email>\n" +
-                "</employee>";
 
         String format = "XML";
 
-        loggingService.writeLog(txid, xmlContent, format);
+        loggingService.writeLog(txid, Constant.xmlContent1, format);
+        loggingService.writeLog(txid, Constant.xmlContent2, format);
+        loggingService.writeLog(txid, Constant.xmlContent3, format);
+
+        loggingService.queryLog(txid); // implement this first
+//        loggingService.queryLog(txid, lsn); // this one later
 
 //        loggingService.writeLog(txid, "JSON_content", "JSON"); // for dependency injection testing only
 

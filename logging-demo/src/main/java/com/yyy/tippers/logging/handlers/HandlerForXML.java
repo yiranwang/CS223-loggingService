@@ -19,7 +19,7 @@ public class HandlerForXML implements Handlerable {
     }
 
     @Override
-    public void parse(String xmlContent) {
+    public Object parse(String xmlContent) {
 
         String firstTag = parseFirstTag(xmlContent);
 
@@ -28,6 +28,8 @@ public class HandlerForXML implements Handlerable {
         Object obj = unmarshaller.getObject();
 
         System.out.println(String.format("<HandlerForXML><parse> - retrieved object from unmarshaller successful - $obj class : %s", obj.getClass()));
+
+        return obj;
     }
 
     /**

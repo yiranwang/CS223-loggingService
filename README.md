@@ -33,7 +33,7 @@ W7: Extend it to accept various types of payload format.
 
 ## Tentative APIs
 
-__LastUpdate: 04262017__  
+__LastUpdate: 05032017__  
 
 __"loggingService" is a privately attached member of the application.__
 
@@ -63,6 +63,16 @@ Potential Output:
 * lsn : INT : log sequential number
 
 _maintain logs within the same transaction using doubly linkedlist._
+
+---
+
+Clients query log by calling: __loggingService.queryLog(txid)__  
+
+Input:
+* txid : AtomicInteger : transaction ID
+
+Output:
+* Specific output format hasn't been decided.
 
 ---
 
@@ -137,14 +147,18 @@ Unmarshall XML to java class. Here, we use two xsds and two xmls(src/main/reourc
 2. in pom.xml, there is plugin of jaxb to generate the java class from the XSD(schema). Right click pom.xml-->maven-->Reimport. Then Right click pom.xml --> maven--> generate the sources and update folders. After these steps, in target/generated-sources/xjc, you will see the class folders: one is about the employee class, the other is about the shiporder class.  
 3. Unmarshall the xml file using the generated data.  
 
+
 ### Transaction Object Interface
+
+__LastUpdate: 05032017__  
+
 ``` java
 // The following classes are defined in src/../loggingService/utils/
 
 public class TransactionLog {}
 
 TransactionLog transaction = new TransactionLog(AtomicInteger txid);
-boolean 0/1 = transaction.append(Object entryObj);
+int lsn = transaction.append(Object entryObj);
 AtomicInteger txid = transaction.getID();
 TransactionEntry firstEntry = transaction.getFirstEntry();
 TransactionEntry entry = transaction.getEntryNo(int lsn);
