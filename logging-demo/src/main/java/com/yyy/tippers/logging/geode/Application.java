@@ -4,12 +4,13 @@ package com.yyy.tippers.logging.geode;
  * Created by yiranwang on 5/3/17.
  */
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import com.yyy.tippers.logging.utils.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.gemfire.CacheFactoryBean;
@@ -17,10 +18,13 @@ import org.springframework.data.gemfire.LocalRegionFactoryBean;
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
 
 import com.gemstone.gemfire.cache.GemFireCache;
+
+
+// this class is used to start the Geode and create a region named "hello" to store the Transaction
+
 @Configuration
 @EnableGemfireRepositories
-@SuppressWarnings("unused")
-public class Application implements CommandLineRunner {
+public class Application implements CommandLineRunner{
 
     @Bean
     Properties gemfireProperties() {
@@ -40,59 +44,22 @@ public class Application implements CommandLineRunner {
     }
 
     @Bean
-    LocalRegionFactoryBean<String, Person> helloRegion(final GemFireCache cache) {
-        LocalRegionFactoryBean<String, Person> helloRegion = new LocalRegionFactoryBean<String, Person>();
-        helloRegion.setCache(cache);
-        helloRegion.setClose(false);
-        helloRegion.setName("hello");
-        helloRegion.setPersistent(false);
-        return helloRegion;
+    LocalRegionFactoryBean<AtomicInteger, Transaction> logRegion (final GemFireCache cache) {
+        LocalRegionFactoryBean<AtomicInteger, Transaction> logRegion = new LocalRegionFactoryBean<AtomicInteger, Transaction>();
+        logRegion.setCache(cache);
+        logRegion.setClose(false);
+        logRegion.setName("logRegion");
+        logRegion.setPersistent(false);
+        return logRegion;
     }
 
     @Autowired
-    PersonRepository personRepository;
+    TransactionRepository transactionRepository;
 
 
-    @Override
     public void run(String... strings) throws Exception {
-        Person alice = new Person("Alice", 40);
-        Person bob = new Person("Baby Bob", 1);
-        Person carol = new Person("Teen Carol", 13);
+        List<Transaction> list = transactionRepository.findAll();
+        System.out.println("start to a new region, and the current region size is:" + list.size());
 
-        System.out.println("Before linking up with Gemfire...");
-        for (Person person : new Person[] { alice, bob, carol }) {
-            System.out.println("\t" + person);
-        }
-
-        personRepository.save(alice);
-        personRepository.save(bob);
-        personRepository.save(carol);
-
-        System.out.println("Lookup each person by name...");
-        for (String name : new String[] { alice.name, bob.name, carol.name }) {
-            System.out.println("\t" + personRepository.findByName(name));
-        }
-
-        System.out.println("Adults (over 18):");
-        for (Person person : personRepository.findByAgeGreaterThan(18)) {
-            System.out.println("\t" + person);
-        }
-
-        System.out.println("Babies (less than 5):");
-        for (Person person : personRepository.findByAgeLessThan(5)) {
-            System.out.println("\t" + person);
-        }
-
-        System.out.println("Teens (between 12 and 20):");
-        for (Person person : personRepository.findByAgeGreaterThanAndAgeLessThan(12, 20)) {
-            System.out.println("\t" + person);
-        }
     }
-
-    public static void main(String[] args) throws IOException {
-        SpringApplication application = new SpringApplication(Application.class);
-        application.setWebEnvironment(false);
-        application.run(args);
-    }
-
 }

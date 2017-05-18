@@ -6,8 +6,10 @@ package com.yyy.tippers.logging;
 
 
 import com.google.inject.Inject;
+import com.yyy.tippers.logging.db.DbService;
 import com.yyy.tippers.logging.factory.Handlerable;
 import com.yyy.tippers.logging.factory.HandlerFactory;
+import com.yyy.tippers.logging.utils.Transaction;
 import com.yyy.tippers.logging.utils.TransactionEntry;
 import com.yyy.tippers.logging.utils.TransactionLog;
 
@@ -19,8 +21,11 @@ public class LoggingService {
 
     private final HandlerFactory handlerFactory; // placeholder for the injected
 
-    private final Map<AtomicInteger, TransactionLog> transactionManager; // in memory mapping txid -> transaction
+    // for test-purpose only
+    private final Map<AtomicInteger, TransactionLog> transactionManager;
 
+//    private DbService dbService = new DbService();
+    private DbService dbService;
 
     /*
       This constructor
@@ -33,18 +38,15 @@ public class LoggingService {
     @Inject
     public LoggingService(HandlerFactory handlerFactory) {
         this.handlerFactory = handlerFactory;
-        this.transactionManager = new HashMap<AtomicInteger, TransactionLog>();
+        this.transactionManager = new HashMap<AtomicInteger, TransactionLog>(); // for test-purpose only
+        this.dbService = new DbService();
     }
 
 
-    /*
-      Todo: YueDing -> Retrieve transaction ID from local DB, code resides in db package.
-     */
-
     public AtomicInteger newTransaction() {
-        AtomicInteger txid = new AtomicInteger(0);
-        // txid = db.SomeDataBaseClass.nextEntryIndex() // it should always be unique
-        transactionManager.put(txid, new TransactionLog(txid));
+        AtomicInteger txid = dbService.getNextTxid();
+
+        transactionManager.put(txid, new TransactionLog(txid)); // for test-purpose only
         return txid;
     }
 
@@ -55,8 +57,11 @@ public class LoggingService {
      */
 
     public void writeLog(AtomicInteger txid, String content, String format) {
-        // with runtime input - txid, retrieve the transactionLog from transactionManager
-        TransactionLog txlg = transactionManager.get(txid);
+
+        //get transactionLog from geode according to txid
+        Transaction tx = dbService.getTransactionRepository().findByTxid(txid);
+
+        TransactionLog txlg = tx.getTransactionLog();
 
         // with runtime input - format, generate specific and concrete handler.
         Handlerable handler = handlerFactory.getHandler(format);
@@ -69,9 +74,10 @@ public class LoggingService {
 
         System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid.get()));
 
-
-        //  Todo: Shengnan, Yue -> Store TransactionLog obj in Geode.
-
+        // for test-purpose only
+        TransactionLog txlg_test = transactionManager.get(txid);
+        int lsn_test = txlg_test.append(obj);
+        System.out.println(String.format("TEST: <LoggingService><writelog> add an entry (lsn_test: %d) into <TransactionLog> (txid: %d)", lsn_test, txid.get()));
 
 
     }

@@ -8,7 +8,7 @@
   <name>logging-demo</name>
   <url>http://maven.apache.org</url>
 
-  <!--for spring-->
+  <!--SPRINT PARENT-->
 
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -22,10 +22,6 @@
   </properties>
 
 
-
-
-
-
   <dependencies>
 
 	<dependency>
@@ -34,6 +30,8 @@
 	  <version>3.8.1</version>
 	  <scope>test</scope>
     </dependency>
+
+    <!-- GOOGLE GUICE DEPENDENCY -->
 
     <dependency>
       <groupId>com.google.inject</groupId>
@@ -53,19 +51,38 @@
       <version>4.1.0</version>
     </dependency>
 
-
-    <!--spring-->
+    <!-- SPRING DEPENDENCY -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-gemfire</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.springframework.shell</groupId>
       <artifactId>spring-shell</artifactId>
-      <version>${spring-shell.version}</version>
+      <version>1.0.0.RELEASE</version>
       <scope>runtime</scope>
     </dependency>
 
+    <!-- JPA Data (We are going to use Repositories, Entities, Hibernate, etc...) -->
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <!-- Use MySQL Connector-J -->
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
 
 
   </dependencies>
