@@ -54,11 +54,11 @@ public class Application implements CommandLineRunner{
     }
 
     @Autowired
-    TransactionRepository transactionRepository;
+    TransactionRepository TransactionRepository;
 
 
     public void run(String... strings) throws Exception {
-        List<Transaction> list = transactionRepository.findAll();
+        List<Transaction> list = TransactionRepository.findAll();
         System.out.println("start to a new region, and the current region size is:" + list.size());
 
     }

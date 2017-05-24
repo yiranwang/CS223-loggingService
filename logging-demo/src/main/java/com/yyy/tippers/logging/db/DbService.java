@@ -1,6 +1,8 @@
 package com.yyy.tippers.logging.db;
 
+import com.gemstone.gemfire.cache.Region;
 import com.yyy.tippers.logging.geode.TransactionRepository;
+import com.yyy.tippers.logging.utils.Transaction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -33,6 +35,7 @@ public class DbService {
 
         context.refresh();
         this.transactionRepository = context.getBean(TransactionRepository.class);
+//        Region<AtomicInteger,Transaction> region = context.getBean(Region.class);
     }
 
     public DataSource getDs() {
@@ -77,7 +80,14 @@ public class DbService {
         }
 
         //get largest txid from geode
-        largestTxid = Math.max(largestTxid, transactionRepository.findLargestTxid());
+
+        int largestTxidGeo = 0;
+        Transaction a = transactionRepository.findLargestTxid();
+        if(a != null){
+            largestTxidGeo = a.getTxid().intValue();
+        }
+
+        largestTxid = Math.max(largestTxid, largestTxidGeo);
 
         return new AtomicInteger(largestTxid + 1);
     }

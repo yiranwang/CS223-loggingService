@@ -33,7 +33,7 @@ public class Demo
 
     private void start() {
 
-
+        // test first transaction, containing 3 logs
         AtomicInteger txid = loggingService.newTransaction();
 
 
@@ -49,6 +49,14 @@ public class Demo
 //        loggingService.writeLog(txid, "JSON_content", "JSON"); // for dependency injection testing only
 
         loggingService.flushLog(txid);
+
+        // test the second transaction, containing 3 logs
+        txid = loggingService.newTransaction();
+        loggingService.writeLog(txid, Constant.xmlContent1, format);
+        loggingService.writeLog(txid, Constant.xmlContent2, format);
+        loggingService.writeLog(txid, Constant.xmlContent3, format);
+        loggingService.flushLog(txid);
+
     }
 
     /*

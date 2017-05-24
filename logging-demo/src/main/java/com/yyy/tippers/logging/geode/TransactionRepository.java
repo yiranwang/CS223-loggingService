@@ -19,6 +19,7 @@ public interface TransactionRepository extends CrudRepository<Transaction, Atomi
 
     List<Transaction> findAll();
 
-    @Query("select MAX(txid) from /transactionLog")
-    int findLargestTxid();
+//    @Query("select MAX(txid) from /Transaction")
+    @Query("SELECT DISTINCT * FROM /logRegion ORDER BY txid desc limit 1")
+    Transaction findLargestTxid();
 }

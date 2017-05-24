@@ -61,6 +61,12 @@ public class LoggingService {
         //get transactionLog from geode according to txid
         Transaction tx = dbService.getTransactionRepository().findByTxid(txid);
 
+        // if transaction is never stored in the geod, we create a new transaction.
+        if(tx == null){
+            tx = new Transaction(txid, new TransactionLog(txid));
+
+        }
+
         TransactionLog txlg = tx.getTransactionLog();
 
         // with runtime input - format, generate specific and concrete handler.
