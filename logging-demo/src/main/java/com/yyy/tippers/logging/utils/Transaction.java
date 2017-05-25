@@ -13,20 +13,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Region("logRegion")
 public class Transaction {
     @Id
-    private AtomicInteger txid;
+    private int txid;
     private TransactionLog transactionLog;
 
     @PersistenceConstructor
-    public Transaction(AtomicInteger txid, TransactionLog transactionLog) {
+    public Transaction(int txid, TransactionLog transactionLog) {
         this.txid = txid;
         this.transactionLog = transactionLog;
     }
 
-    public AtomicInteger getTxid() {
+    public int getTxid() {
         return txid;
     }
 
-    public void setTxid(AtomicInteger txid) {
+    public void setTxid(int txid) {
         this.txid = txid;
     }
 

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TransactionLogTester {
     public static void main(String[] args) {
         // test constructor
-        TransactionLog transaction = new TransactionLog(new AtomicInteger(0));
+        TransactionLog transaction = new TransactionLog(0);
 
         // test append()
         int entry0 = transaction.append("FirstEntry");
@@ -19,7 +19,7 @@ public class TransactionLogTester {
         int entry2 = transaction.append("ThirdEntry");
 
         // test getID()
-        System.out.println(String.format("<TransactionTest><main> - transaction ID : %d", transaction.getID().get()));
+        System.out.println(String.format("<TransactionTest><main> - transaction ID : %d", transaction.getID()));
 
         // test getFirstEntry()
         TransactionEntry firstEntry = transaction.getFirstEntry();

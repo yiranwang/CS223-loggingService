@@ -3,6 +3,7 @@ package com.yyy.tippers.logging.db;
 import com.gemstone.gemfire.cache.Region;
 import com.yyy.tippers.logging.geode.TransactionRepository;
 import com.yyy.tippers.logging.utils.Transaction;
+import com.yyy.tippers.logging.utils.TransactionLog;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DbService {
     private DataSource ds; // used for connection to mySQL
     private TransactionRepository transactionRepository;
+    private Region<Integer, Transaction> region;
 
     public DbService() {
 
@@ -35,7 +37,7 @@ public class DbService {
 
         context.refresh();
         this.transactionRepository = context.getBean(TransactionRepository.class);
-//        Region<AtomicInteger,Transaction> region = context.getBean(Region.class);
+        region = context.getBean(Region.class);
     }
 
     public DataSource getDs() {
@@ -54,10 +56,17 @@ public class DbService {
         this.transactionRepository = transactionRepository;
     }
 
+    public Region<Integer, Transaction> getRegion(){
+        return region;
+    }
+
     /*
             Get next transaction id from geode and mysql by getting the largest txid so far + 1
         * */
-    public synchronized AtomicInteger getNextTxid() {
+    public synchronized int getNextTxid() {
+
+        // check the transaction is stored in Geode or not:
+        boolean isInGeode = true;
 
         //get largest txid from mysql
         Connection conn = DataSourceUtils.getConnection(ds);
@@ -84,11 +93,26 @@ public class DbService {
         int largestTxidGeo = 0;
         Transaction a = transactionRepository.findLargestTxid();
         if(a != null){
-            largestTxidGeo = a.getTxid().intValue();
+            largestTxidGeo = a.getTxid();
+        }else{
+            isInGeode = false;
         }
 
         largestTxid = Math.max(largestTxid, largestTxidGeo);
 
-        return new AtomicInteger(largestTxid + 1);
+        int finalTxid = largestTxid + 1;
+
+        // add the new Transaction to the Geode region
+        if(!isInGeode){
+            Transaction newTransaction = new Transaction(finalTxid, new TransactionLog(finalTxid));
+            region.put(finalTxid, newTransaction);
+        }
+
+        return finalTxid;
+
+
     }
+
+
+
 }

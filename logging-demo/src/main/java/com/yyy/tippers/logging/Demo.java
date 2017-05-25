@@ -4,7 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -34,7 +33,7 @@ public class Demo
     private void start() {
 
         // test first transaction, containing 3 logs
-        AtomicInteger txid = loggingService.newTransaction();
+        int txid = loggingService.newTransaction();
 
 
         String format = "XML";

@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
-public interface TransactionRepository extends CrudRepository<Transaction, AtomicInteger>{
+public interface TransactionRepository extends CrudRepository<Transaction, Integer>{
 
-    Transaction findByTxid(AtomicInteger txid);
+    Transaction findByTxid(int txid);
 
     List<Transaction> findAll();
 

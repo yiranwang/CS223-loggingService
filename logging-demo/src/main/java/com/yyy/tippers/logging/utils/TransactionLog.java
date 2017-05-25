@@ -15,7 +15,7 @@ import org.springframework.data.gemfire.mapping.Region;
 @Region("hello")
 public class TransactionLog {
     @Id
-    private AtomicInteger txid;
+    private int txid;
 
     private int lsn = -1;
 
@@ -25,7 +25,7 @@ public class TransactionLog {
     private TransactionEntry curtEntry;
 
     @PersistenceConstructor
-    public TransactionLog(AtomicInteger txid) {
+    public TransactionLog(int txid) {
         this.pointer = null; // pointer set to search through the Linkedlist for particular entry
         this.curtEntry = null; // keep track of the last entry
         this.txid = txid;
@@ -56,7 +56,7 @@ public class TransactionLog {
         return lsn;
     }
 
-    public AtomicInteger getID() {
+    public int getID() {
         return txid;
     }
 

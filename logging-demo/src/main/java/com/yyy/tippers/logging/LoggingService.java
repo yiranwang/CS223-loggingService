@@ -15,14 +15,13 @@ import com.yyy.tippers.logging.utils.TransactionLog;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoggingService {
 
     private final HandlerFactory handlerFactory; // placeholder for the injected
 
     // for test-purpose only
-    private final Map<AtomicInteger, TransactionLog> transactionManager;
+    private final Map<Integer, TransactionLog> transactionManager;
 
 //    private DbService dbService = new DbService();
     private DbService dbService;
@@ -38,13 +37,13 @@ public class LoggingService {
     @Inject
     public LoggingService(HandlerFactory handlerFactory) {
         this.handlerFactory = handlerFactory;
-        this.transactionManager = new HashMap<AtomicInteger, TransactionLog>(); // for test-purpose only
+        this.transactionManager = new HashMap<Integer, TransactionLog>(); // for test-purpose only
         this.dbService = new DbService();
     }
 
 
-    public AtomicInteger newTransaction() {
-        AtomicInteger txid = dbService.getNextTxid();
+    public int newTransaction() {
+        int txid = dbService.getNextTxid();
 
         transactionManager.put(txid, new TransactionLog(txid)); // for test-purpose only
         return txid;
@@ -56,7 +55,7 @@ public class LoggingService {
       The condition logic is defined in the concrete class - LoggingHandlerFactory.java
      */
 
-    public void writeLog(AtomicInteger txid, String content, String format) {
+    public void writeLog(int txid, String content, String format) {
 
         //get transactionLog from geode according to txid
         Transaction tx = dbService.getTransactionRepository().findByTxid(txid);
@@ -78,19 +77,19 @@ public class LoggingService {
         // put the entryObj into TransactionLog - a doublyLinkedList
         int lsn = txlg.append(obj);
 
-        System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid.get()));
+        System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid));
 
         // for test-purpose only
         TransactionLog txlg_test = transactionManager.get(txid);
         int lsn_test = txlg_test.append(obj);
-        System.out.println(String.format("TEST: <LoggingService><writelog> add an entry (lsn_test: %d) into <TransactionLog> (txid: %d)", lsn_test, txid.get()));
+        System.out.println(String.format("TEST: <LoggingService><writelog> add an entry (lsn_test: %d) into <TransactionLog> (txid: %d)", lsn_test, txid));
 
 
     }
 
     // this is just for demo purpose!
     // Not sure where the output goes, we need to discuss the scope of the query method.
-    public void queryLog(AtomicInteger txid) {
+    public void queryLog(int txid) {
         TransactionEntry entry = transactionManager.get(txid).getFirstEntry();
         while (entry.hasNext()) {
             System.out.println(entry.getEntryObject());
@@ -98,7 +97,7 @@ public class LoggingService {
         }
     }
 
-    public int flushLog(AtomicInteger txid) {
+    public int flushLog(int txid) {
         /*
           Although, we are not sure about in-mem DB APIs yet. I will update this before next Monday.
           Todo: YueDing -> Build connection between in-mem DB and local DB, code resides in db package.
