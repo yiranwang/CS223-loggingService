@@ -147,6 +147,12 @@ Unmarshall XML to java class. Here, we use two xsds and two xmls(src/main/reourc
 2. in pom.xml, there is plugin of jaxb to generate the java class from the XSD(schema). Right click pom.xml-->maven-->Reimport. Then Right click pom.xml --> maven--> generate the sources and update folders. After these steps, in target/generated-sources/xjc, you will see the class folders: one is about the employee class, the other is about the shiporder class.  
 3. Unmarshall the xml file using the generated data.  
 
+### Geode Implementation Details fix:
+shengnan的更新没有问题，改动的地方有：  
+1. 全部的AtomicInteger 改成 Int，大概因为Geode不支持AtomicInteger查询，但既然整个method加了synchronize，就没有什么问题。
+2. TransactionRepository里面findLargestTxid这个方法的执行细节改了。因为之前的方法Geode不支持。
+3. 在DBService里面，完善了getNextTxid这个method的执行细节。如果Geode里面没有当前transaction，那么就创造一个空的transaction with txid being the max(mysql_largestID, geode_largestID).
+
 
 ### Transaction Object Interface
 
