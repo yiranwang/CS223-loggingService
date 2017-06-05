@@ -7,6 +7,7 @@ package com.yyy.tippers.logging;
 
 import com.google.inject.Inject;
 import com.yyy.tippers.logging.db.DbService;
+import com.yyy.tippers.logging.entity.Payload;
 import com.yyy.tippers.logging.factory.Handlerable;
 import com.yyy.tippers.logging.factory.HandlerFactory;
 import com.yyy.tippers.logging.utils.Transaction;
@@ -49,39 +50,82 @@ public class LoggingService {
         return txid;
     }
 
+    public int getNextLsn() {
+        return dbService.getNextLsn();
+    }
+
+    public Object parseObject(Payload payload) {
+
+        Object object = null;
+
+        if (payload.getType().equals("XML")) {
+            // with runtime input - format, generate specific and concrete handler.
+            Handlerable handler = handlerFactory.getHandler("XML");
+
+            // unmarshal the input - content into log entry object
+            object = handler.parse(payload.getXmlContent());
+
+        }else if (payload.getType().equals("JSON")) {
+            // TODO: JSON
+
+        }else if (payload.getType().equals("Plaintxt")) {
+            object = payload.getTxtContent();
+
+        }else if (payload.getType().equals("Binary")) {
+            byte[] payload_bytes = payload.getBinaryContent().getBytes();
+            object = payload_bytes;
+        }
+
+        return object;
+    }
+
 
     /*
       Here is how we can invoke the handlerFactory to produce handler for us according to some input.
       The condition logic is defined in the concrete class - LoggingHandlerFactory.java
      */
 
-    public void writeLog(int txid, String content, String format) {
+    public void writeLog(int txid, int timestamp, String type, Payload payload) {
 
-        //get transactionLog from geode according to txid
-        Transaction tx = dbService.getTransactionRepository().findByTxid(txid);
+        /*//get transactionLog from geode according to txid
+        Transaction tx = dbService.getTransactionRepository().findByTxid(txid);*/
 
-        // if transaction is never stored in the geod, we create a new transaction.
-        if(tx == null){
-            tx = new Transaction(txid, new TransactionLog(txid));
+        //get transactionLog from geode according to largest lsn
+        Transaction prevTx = dbService.getTransactionRepository().findByLargestLsn();
 
+        Transaction tx = null;
+
+        int lsn = 0;
+
+        // get object based on payload type
+        Object object = parseObject(payload);
+
+        // if no transaction in geod, we get the lsn from the largest Lsn number in mysql + 1.
+        if(prevTx == null){
+            lsn = dbService.getLargetLsnInMysql() + 1;
+
+        // else we get lsn from prevTx + 1;
+        }else {
+            lsn = prevTx.getLsn() + 1;
         }
 
-        TransactionLog txlg = tx.getTransactionLog();
+        tx = new Transaction(lsn, txid, timestamp, type, payload, object);
 
-        // with runtime input - format, generate specific and concrete handler.
-        Handlerable handler = handlerFactory.getHandler(format);
+        //set prev transaction's next pointer and current transaction's prev pointer
+        tx.setPrev(prevTx);
 
-        // unmarshal the input - content into log entry object
-        Object obj = handler.parse(content);
+        if (prevTx != null) {
+            prevTx.setNext(tx);
+        }
 
-        // put the entryObj into TransactionLog - a doublyLinkedList
-        int lsn = txlg.append(obj);
+        //save current transaction to geode region
+        dbService.getTransactionRepository().save(tx);
 
         System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid));
 
         // for test-purpose only
         TransactionLog txlg_test = transactionManager.get(txid);
-        int lsn_test = txlg_test.append(obj);
+        int lsn_test = txlg_test.append(object);
         System.out.println(String.format("TEST: <LoggingService><writelog> add an entry (lsn_test: %d) into <TransactionLog> (txid: %d)", lsn_test, txid));
 
 
@@ -97,11 +141,28 @@ public class LoggingService {
         }
     }
 
-    public int flushLog(int txid) {
+    public int flushLog(int lsn) {
         /*
           Although, we are not sure about in-mem DB APIs yet. I will update this before next Monday.
           Todo: YueDing -> Build connection between in-mem DB and local DB, code resides in db package.
          */
+
+        Transaction tx = dbService.getTransactionRepository().findByLsn(lsn);
+
+        Transaction curTx = tx;
+
+        while (curTx != null) {
+
+            //save curTx to external database
+            dbService.saveLogToDb(curTx);
+
+            //remove curTx from geode
+            dbService.getTransactionRepository().delete(curTx);
+
+            curTx = curTx.getPrev();
+        }
+
+
 
         System.out.println("flush successful!");
         return 0;

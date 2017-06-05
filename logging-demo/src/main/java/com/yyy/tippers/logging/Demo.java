@@ -3,7 +3,7 @@ package com.yyy.tippers.logging;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
+import com.yyy.tippers.logging.entity.Payload;
 
 
 /**
@@ -32,29 +32,46 @@ public class Demo
 
     private void start() {
 
+        //get next Txid
         // test first transaction, containing 3 logs
         int txid = loggingService.newTransaction();
 
-
         String format = "XML";
 
-        loggingService.writeLog(txid, Constant.xmlContent1, format);
-        loggingService.writeLog(txid, Constant.xmlContent2, format);
-        loggingService.writeLog(txid, Constant.xmlContent3, format);
+        int timestamp = 0;
+        String type = "Database Log";
+
+        Payload payload = new Payload();
+        payload.setType("XML");
+
+        payload.setXmlContent(Constant.xmlContent1);
+        loggingService.writeLog(txid, timestamp, type, payload);
+
+        payload.setXmlContent(Constant.xmlContent2);
+        loggingService.writeLog(txid, timestamp, type, payload);
+
+        payload.setXmlContent(Constant.xmlContent3);
+        loggingService.writeLog(txid, timestamp, type, payload);
 
         loggingService.queryLog(txid); // implement this first
 //        loggingService.queryLog(txid, lsn); // this one later
 
 //        loggingService.writeLog(txid, "JSON_content", "JSON"); // for dependency injection testing only
 
-        loggingService.flushLog(txid);
+        loggingService.flushLog(3);
 
         // test the second transaction, containing 3 logs
         txid = loggingService.newTransaction();
-        loggingService.writeLog(txid, Constant.xmlContent1, format);
-        loggingService.writeLog(txid, Constant.xmlContent2, format);
-        loggingService.writeLog(txid, Constant.xmlContent3, format);
-        loggingService.flushLog(txid);
+
+        payload.setXmlContent(Constant.xmlContent1);
+        loggingService.writeLog(txid, timestamp, type, payload);
+
+        payload.setXmlContent(Constant.xmlContent2);
+        loggingService.writeLog(txid, timestamp, type, payload);
+
+        payload.setXmlContent(Constant.xmlContent3);
+        loggingService.writeLog(txid, timestamp, type, payload);
+        loggingService.flushLog(6);
 
     }
 

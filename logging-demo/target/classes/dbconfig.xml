@@ -5,9 +5,9 @@
 
     <util:map id="dbProps">
         <entry key="db.driver" value="com.mysql.jdbc.Driver"/>
-        <entry key="db.jdbcurl" value="jdbc:mysql://localhost:3306/test_spring?useSSL=false"/>
+        <entry key="db.jdbcurl" value="jdbc:mysql://localhost:3306/CS223-loggingService?useSSL=false"/>
         <entry key="db.username" value="root"/>
-        <entry key="db.password" value="abc123456"/>
+        <entry key="db.password" value="root"/>
     </util:map>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">

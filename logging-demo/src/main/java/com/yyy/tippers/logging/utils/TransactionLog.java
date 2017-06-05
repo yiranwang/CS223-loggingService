@@ -1,23 +1,22 @@
 package com.yyy.tippers.logging.utils;
 
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.gemfire.mapping.Region;
+
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by shayangzang on 5/3/17.
  */
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.gemfire.mapping.Region;
 
 @Region("hello")
 public class TransactionLog {
     @Id
     private int txid;
 
-    private int lsn = -1;
+    private int lsn;
 
     private TransactionEntry head;
     private TransactionEntry tail;
@@ -73,5 +72,11 @@ public class TransactionLog {
         throw new NoSuchElementException(String.format("No entry object found at No.%d in this <TransactionLog>", lsn));
     }
 
+    public int getLsn() {
+        return lsn;
+    }
 
+    public void setLsn(int lsn) {
+        this.lsn = lsn;
+    }
 }
