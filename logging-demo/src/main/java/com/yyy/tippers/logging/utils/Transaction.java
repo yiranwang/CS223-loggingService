@@ -14,8 +14,8 @@ public class Transaction {
     @Id
     private int lsn;
     private int txid;
-    private int timestamp;
-    private String type;
+    private int time_stamp;
+    private String log_type;
     private Payload payload;
 
     private Object object;
@@ -26,15 +26,18 @@ public class Transaction {
     private TransactionLog transactionLog;
 
     @PersistenceConstructor
-    public Transaction(int lsn, int txid, int timestamp, String type, Payload payload, Object object) {
+    public Transaction(int lsn, int txid, int time_stamp, String log_type, Payload payload, Object object) {
         this.lsn = lsn;
         this.txid = txid;
-        this.timestamp = timestamp;
-        this.type = type;
+        this.time_stamp = time_stamp;
+        this.log_type = log_type;
         this.payload = payload;
         this.object = object;
         this.prev = null;
         this.next = null;
+    }
+
+    public Transaction() {
     }
 
     public Object getObject() {
@@ -85,20 +88,20 @@ public class Transaction {
         this.lsn = lsn;
     }
 
-    public int getTimestamp() {
-        return timestamp;
+    public int getTime_stamp() {
+        return time_stamp;
     }
 
-    public void setTimestamp(int timestamp) {
-        this.timestamp = timestamp;
+    public void setTime_stamp(int time_stamp) {
+        this.time_stamp = time_stamp;
     }
 
-    public String getType() {
-        return type;
+    public String getLog_type() {
+        return log_type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setLog_type(String log_type) {
+        this.log_type = log_type;
     }
 
     public Payload getPayload() {

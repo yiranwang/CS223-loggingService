@@ -2,16 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="4efd5584-9465-426a-88be-555953541baf" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/Demo.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/Demo.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/LoggingService.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/LoggingService.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/db/DbService.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/db/DbService.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/geode/Application.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/geode/Application.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/geode/TransactionRepository.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/geode/TransactionRepository.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/utils/Transaction.class" afterPath="$PROJECT_DIR$/logging-demo/target/classes/com/yyy/tippers/logging/utils/Transaction.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/logging-demo.iml" afterPath="$PROJECT_DIR$/logging-demo/logging-demo.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/LoggingService.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/LoggingService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/db/DbService.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/db/DbService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/Application.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/Application.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/TransactionRepository.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/TransactionRepository.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/Transaction.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/Transaction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/TransactionLog.java" afterPath="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/TransactionLog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logging-demo/src/main/resources/dbconfig.xml" afterPath="$PROJECT_DIR$/logging-demo/src/main/resources/dbconfig.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/logging-demo/target/" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -35,10 +38,12 @@
       <file leaf-file-name="Demo.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="62" column="8" selection-start-line="62" selection-start-column="8" selection-end-line="73" selection-end-column="35" />
+            <state relative-caret-position="294">
+              <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#662#663#0" expanded="true" />
+                <element signature="e#714#715#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -60,30 +65,36 @@
       <file leaf-file-name="DbService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/db/DbService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1200">
-              <caret line="241" column="9" selection-start-line="241" selection-start-column="9" selection-end-line="241" selection-end-column="9" />
+            <state relative-caret-position="207">
+              <caret line="567" column="36" selection-start-line="567" selection-start-column="36" selection-end-line="567" selection-end-column="36" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1496622318000" expanded="true" signature="2474:2496" placeholder="select MAX(t... transactionLog" />
-                <marker date="1496622318000" expanded="true" signature="2474:2504" placeholder="select MAX(t... logTable" />
-                <marker date="1496622318000" expanded="true" signature="3760:3789" placeholder="select MAX(l... logTable" />
-                <marker date="1496622318000" expanded="true" signature="4603:4632" placeholder="select MAX(l... logTable" />
-                <marker date="1496622318000" expanded="true" signature="5885:5905" placeholder="INSERT INTO logTable... " />
-                <marker date="1496622318000" expanded="true" signature="5885:6009" placeholder="INSERT INTO logTable... " />
-                <marker date="1496622318000" expanded="true" signature="8415:8552" placeholder="INSERT INTO missingValue... " />
-                <marker date="1496622318000" expanded="true" signature="8415:8559" placeholder="INSERT INTO missingValue... " />
-                <marker date="1496622318000" expanded="true" signature="8415:8577" placeholder="INSERT INTO employeeLog... " />
+                <element signature="e#9656#9669#0" expanded="true" />
+                <element signature="e#11824#11837#0" expanded="true" />
+                <element signature="e#14089#14102#0" expanded="true" />
+                <marker date="1496632119000" expanded="true" signature="2619:2641" placeholder="select MAX(t... transactionLog" />
+                <marker date="1496632119000" expanded="true" signature="2619:2649" placeholder="select MAX(t... logTable" />
+                <marker date="1496632119000" expanded="true" signature="3905:3934" placeholder="select MAX(l... logTable" />
+                <marker date="1496632119000" expanded="true" signature="4748:4777" placeholder="select MAX(l... logTable" />
+                <marker date="1496632119000" expanded="true" signature="6030:6050" placeholder="INSERT INTO logTable... " />
+                <marker date="1496632119000" expanded="true" signature="6030:6170" placeholder="INSERT INTO logTable... " />
+                <marker date="1496632119000" expanded="true" signature="7719:7805" placeholder="select MAX(l... logTable" />
+                <marker date="1496632119000" expanded="true" signature="7719:7817" placeholder="select txid,... logTable" />
+                <marker date="1496632119000" expanded="true" signature="9808:9906" placeholder="select txid,... logTable" />
+                <marker date="1496632119000" expanded="true" signature="11976:12114" placeholder="select lsn, logTable" />
+                <marker date="1496632119000" expanded="true" signature="11976:12134" placeholder="select lsn, logTable" />
+                <marker date="1496632119000" expanded="true" signature="14241:14366" placeholder="select lsn, logTable" />
+                <marker date="1496632119000" expanded="true" signature="16360:16394" placeholder="DELETE from " />
+                <marker date="1496632119000" expanded="true" signature="16366:16394" placeholder="select txid,... logTable" />
+                <marker date="1496632119000" expanded="true" signature="16866:16901" placeholder="DELETE from " />
+                <marker date="1496632119000" expanded="true" signature="17400:17442" placeholder="DELETE from " />
+                <marker date="1496632119000" expanded="true" signature="17400:17462" placeholder="DELETE from " />
+                <marker date="1496632119000" expanded="true" signature="17978:18005" placeholder="DELETE from " />
+                <marker date="1496632119000" expanded="true" signature="17978:18017" placeholder="DELETE from " />
+                <marker date="1496632119000" expanded="true" signature="19416:19553" placeholder="INSERT INTO missingValue... " />
+                <marker date="1496632119000" expanded="true" signature="19416:19560" placeholder="INSERT INTO missingValue... " />
+                <marker date="1496632119000" expanded="true" signature="19416:19578" placeholder="INSERT INTO employeeLog... " />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dbconfig.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logging-demo/src/main/resources/dbconfig.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="87" selection-start-line="7" selection-start-column="87" selection-end-line="7" selection-end-column="87" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -91,12 +102,15 @@
       <file leaf-file-name="LoggingService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/LoggingService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="149" column="0" selection-start-line="149" selection-start-column="0" selection-end-line="149" selection-end-column="0" />
+            <state relative-caret-position="234">
+              <caret line="329" column="45" selection-start-line="329" selection-start-column="45" selection-end-line="329" selection-end-column="45" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1729#1730#0" expanded="true" />
-                <element signature="e#1774#1775#0" expanded="true" />
+                <element signature="e#1840#1841#0" expanded="true" />
+                <element signature="e#1885#1886#0" expanded="true" />
+                <element signature="e#5374#5387#0" expanded="true" />
+                <element signature="e#5754#5767#0" expanded="true" />
+                <element signature="e#6162#6175#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -105,9 +119,31 @@
       <file leaf-file-name="TransactionRepository.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/TransactionRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="24" column="33" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="33" />
+            <state relative-caret-position="195">
+              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gfshBean.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logging-demo/src/main/resources/gfshBean.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="13" column="14" selection-start-line="13" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Application.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/Application.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="365">
+              <caret line="61" column="93" selection-start-line="61" selection-start-column="93" selection-end-line="61" selection-end-column="93" />
+              <folding>
+                <element signature="e#2114#2127#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -115,39 +151,38 @@
       <file leaf-file-name="Transaction.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/Transaction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+            <state relative-caret-position="411">
+              <caret line="90" column="32" selection-start-line="90" selection-start-column="32" selection-end-line="90" selection-end-column="32" />
               <folding>
-                <element signature="e#1018#1019#0" expanded="true" />
-                <element signature="e#1047#1048#0" expanded="true" />
-                <element signature="e#1091#1092#0" expanded="true" />
-                <element signature="e#1127#1128#0" expanded="true" />
-                <element signature="e#1163#1164#0" expanded="true" />
-                <element signature="e#1190#1191#0" expanded="true" />
-                <element signature="e#1235#1236#0" expanded="true" />
-                <element signature="e#1267#1268#0" expanded="true" />
-                <element signature="e#1303#1304#0" expanded="true" />
-                <element signature="e#1330#1331#0" expanded="true" />
-                <element signature="e#1375#1376#0" expanded="true" />
-                <element signature="e#1407#1408#0" expanded="true" />
-                <element signature="e#1499#1500#0" expanded="true" />
-                <element signature="e#1531#1532#0" expanded="true" />
-                <element signature="e#1764#1765#0" expanded="true" />
-                <element signature="e#1790#1791#0" expanded="true" />
-                <element signature="e#1825#1826#0" expanded="true" />
-                <element signature="e#1855#1856#0" expanded="true" />
-                <element signature="e#1888#1889#0" expanded="true" />
-                <element signature="e#1920#1921#0" expanded="true" />
-                <element signature="e#1967#1968#0" expanded="true" />
-                <element signature="e#2009#2010#0" expanded="true" />
-                <element signature="e#2040#2041#0" expanded="true" />
-                <element signature="e#2067#2068#0" expanded="true" />
-                <element signature="e#2107#2108#0" expanded="true" />
-                <element signature="e#2139#2140#0" expanded="true" />
-                <element signature="e#2174#2175#0" expanded="true" />
-                <element signature="e#2204#2205#0" expanded="true" />
-                <element signature="e#2251#2252#0" expanded="true" />
-                <element signature="e#2289#2290#0" expanded="true" />
+                <element signature="e#1072#1073#0" expanded="true" />
+                <element signature="e#1101#1102#0" expanded="true" />
+                <element signature="e#1145#1146#0" expanded="true" />
+                <element signature="e#1181#1182#0" expanded="true" />
+                <element signature="e#1217#1218#0" expanded="true" />
+                <element signature="e#1244#1245#0" expanded="true" />
+                <element signature="e#1289#1290#0" expanded="true" />
+                <element signature="e#1321#1322#0" expanded="true" />
+                <element signature="e#1357#1358#0" expanded="true" />
+                <element signature="e#1384#1385#0" expanded="true" />
+                <element signature="e#1429#1430#0" expanded="true" />
+                <element signature="e#1461#1462#0" expanded="true" />
+                <element signature="e#1553#1554#0" expanded="true" />
+                <element signature="e#1585#1586#0" expanded="true" />
+                <element signature="e#1818#1819#0" expanded="true" />
+                <element signature="e#1844#1845#0" expanded="true" />
+                <element signature="e#1879#1880#0" expanded="true" />
+                <element signature="e#1909#1910#0" expanded="true" />
+                <element signature="e#1976#1977#0" expanded="true" />
+                <element signature="e#2025#2026#0" expanded="true" />
+                <element signature="e#2069#2070#0" expanded="true" />
+                <element signature="e#2104#2105#0" expanded="true" />
+                <element signature="e#2135#2136#0" expanded="true" />
+                <element signature="e#2183#2184#0" expanded="true" />
+                <element signature="e#2223#2224#0" expanded="true" />
+                <element signature="e#2258#2259#0" expanded="true" />
+                <element signature="e#2288#2289#0" expanded="true" />
+                <element signature="e#2335#2336#0" expanded="true" />
+                <element signature="e#2373#2374#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -192,17 +227,17 @@
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/UmarshallXMLClass.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/HandlerForXML.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/handlers/UnmarshallXMLClass.java" />
-        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/Application.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/unitester/TransactionLogTester.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/entity.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/entity/Employee.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/TransactionLog.java" />
-        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/Transaction.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/entity/Payload.java" />
-        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/TransactionRepository.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/resources/dbconfig.xml" />
-        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/LoggingService.java" />
+        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/Application.java" />
+        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/Transaction.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/db/DbService.java" />
+        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/TransactionRepository.java" />
+        <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/LoggingService.java" />
         <option value="$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java" />
       </list>
     </option>
@@ -225,8 +260,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="14" />
-    <option name="y" value="23" />
+    <option name="x" value="10" />
+    <option name="y" value="24" />
     <option name="width" value="1246" />
     <option name="height" value="727" />
   </component>
@@ -1053,26 +1088,26 @@
       <workItem from="1493587737549" duration="5684000" />
       <workItem from="1495662889403" duration="4878000" />
       <workItem from="1495683815472" duration="1909000" />
-      <workItem from="1496534269697" duration="19240000" />
+      <workItem from="1496534269697" duration="29473000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52762000" />
+    <option name="totallyTimeSpent" value="62995000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="14" y="23" width="1246" height="727" extended-state="0" />
+    <frame x="10" y="24" width="1246" height="727" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776934" sideWeight="0.49667773" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32755905" sideWeight="0.49667773" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776934" sideWeight="0.3679402" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37795275" sideWeight="0.63621265" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36062992" sideWeight="0.63621265" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1083,7 +1118,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.296063" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30393702" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1107,18 +1142,30 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java</url>
-          <line>100</line>
+          <line>105</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/LoggingService.java</url>
-          <line>149</line>
+          <line>323</line>
           <properties />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java</url>
+          <line>61</line>
+          <properties />
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java</url>
+          <line>77</line>
+          <properties />
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="8" />
+      <option name="time" value="15" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1311,17 +1358,9 @@
         <state relative-caret-position="360">
           <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
           <folding>
-            <element signature="e#429#430#0" expanded="true" />
-            <element signature="e#461#462#0" expanded="true" />
+            <element signature="e#429#430#0" expanded="false" />
+            <element signature="e#461#462#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/Application.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1342,61 +1381,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-23">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/Transaction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding>
-            <element signature="e#1018#1019#0" expanded="true" />
-            <element signature="e#1047#1048#0" expanded="true" />
-            <element signature="e#1091#1092#0" expanded="true" />
-            <element signature="e#1127#1128#0" expanded="true" />
-            <element signature="e#1163#1164#0" expanded="true" />
-            <element signature="e#1190#1191#0" expanded="true" />
-            <element signature="e#1235#1236#0" expanded="true" />
-            <element signature="e#1267#1268#0" expanded="true" />
-            <element signature="e#1303#1304#0" expanded="true" />
-            <element signature="e#1330#1331#0" expanded="true" />
-            <element signature="e#1375#1376#0" expanded="true" />
-            <element signature="e#1407#1408#0" expanded="true" />
-            <element signature="e#1499#1500#0" expanded="true" />
-            <element signature="e#1531#1532#0" expanded="true" />
-            <element signature="e#1764#1765#0" expanded="true" />
-            <element signature="e#1790#1791#0" expanded="true" />
-            <element signature="e#1825#1826#0" expanded="true" />
-            <element signature="e#1855#1856#0" expanded="true" />
-            <element signature="e#1888#1889#0" expanded="true" />
-            <element signature="e#1920#1921#0" expanded="true" />
-            <element signature="e#1967#1968#0" expanded="true" />
-            <element signature="e#2009#2010#0" expanded="true" />
-            <element signature="e#2040#2041#0" expanded="true" />
-            <element signature="e#2067#2068#0" expanded="true" />
-            <element signature="e#2107#2108#0" expanded="true" />
-            <element signature="e#2139#2140#0" expanded="true" />
-            <element signature="e#2174#2175#0" expanded="true" />
-            <element signature="e#2204#2205#0" expanded="true" />
-            <element signature="e#2251#2252#0" expanded="true" />
-            <element signature="e#2289#2290#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/resources/gfshBean.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="14" selection-start-line="13" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/TransactionRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="24" column="33" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -1436,43 +1420,128 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/resources/gfshBean.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="14" selection-start-line="13" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/Application.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="61" column="93" selection-start-line="61" selection-start-column="93" selection-end-line="61" selection-end-column="93" />
+          <folding>
+            <element signature="e#2114#2127#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/utils/Transaction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="90" column="32" selection-start-line="90" selection-start-column="32" selection-end-line="90" selection-end-column="32" />
+          <folding>
+            <element signature="e#1072#1073#0" expanded="true" />
+            <element signature="e#1101#1102#0" expanded="true" />
+            <element signature="e#1145#1146#0" expanded="true" />
+            <element signature="e#1181#1182#0" expanded="true" />
+            <element signature="e#1217#1218#0" expanded="true" />
+            <element signature="e#1244#1245#0" expanded="true" />
+            <element signature="e#1289#1290#0" expanded="true" />
+            <element signature="e#1321#1322#0" expanded="true" />
+            <element signature="e#1357#1358#0" expanded="true" />
+            <element signature="e#1384#1385#0" expanded="true" />
+            <element signature="e#1429#1430#0" expanded="true" />
+            <element signature="e#1461#1462#0" expanded="true" />
+            <element signature="e#1553#1554#0" expanded="true" />
+            <element signature="e#1585#1586#0" expanded="true" />
+            <element signature="e#1818#1819#0" expanded="true" />
+            <element signature="e#1844#1845#0" expanded="true" />
+            <element signature="e#1879#1880#0" expanded="true" />
+            <element signature="e#1909#1910#0" expanded="true" />
+            <element signature="e#1976#1977#0" expanded="true" />
+            <element signature="e#2025#2026#0" expanded="true" />
+            <element signature="e#2069#2070#0" expanded="true" />
+            <element signature="e#2104#2105#0" expanded="true" />
+            <element signature="e#2135#2136#0" expanded="true" />
+            <element signature="e#2183#2184#0" expanded="true" />
+            <element signature="e#2223#2224#0" expanded="true" />
+            <element signature="e#2258#2259#0" expanded="true" />
+            <element signature="e#2288#2289#0" expanded="true" />
+            <element signature="e#2335#2336#0" expanded="true" />
+            <element signature="e#2373#2374#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/db/DbService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1200">
-          <caret line="241" column="9" selection-start-line="241" selection-start-column="9" selection-end-line="241" selection-end-column="9" />
+        <state relative-caret-position="207">
+          <caret line="567" column="36" selection-start-line="567" selection-start-column="36" selection-end-line="567" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1496622318000" expanded="true" signature="2474:2496" placeholder="select MAX(t... transactionLog" />
-            <marker date="1496622318000" expanded="true" signature="2474:2504" placeholder="select MAX(t... logTable" />
-            <marker date="1496622318000" expanded="true" signature="3760:3789" placeholder="select MAX(l... logTable" />
-            <marker date="1496622318000" expanded="true" signature="4603:4632" placeholder="select MAX(l... logTable" />
-            <marker date="1496622318000" expanded="true" signature="5885:5905" placeholder="INSERT INTO logTable... " />
-            <marker date="1496622318000" expanded="true" signature="5885:6009" placeholder="INSERT INTO logTable... " />
-            <marker date="1496622318000" expanded="true" signature="8415:8552" placeholder="INSERT INTO missingValue... " />
-            <marker date="1496622318000" expanded="true" signature="8415:8559" placeholder="INSERT INTO missingValue... " />
-            <marker date="1496622318000" expanded="true" signature="8415:8577" placeholder="INSERT INTO employeeLog... " />
+            <element signature="e#9656#9669#0" expanded="true" />
+            <element signature="e#11824#11837#0" expanded="true" />
+            <element signature="e#14089#14102#0" expanded="true" />
+            <marker date="1496632119000" expanded="true" signature="2619:2641" placeholder="select MAX(t... transactionLog" />
+            <marker date="1496632119000" expanded="true" signature="2619:2649" placeholder="select MAX(t... logTable" />
+            <marker date="1496632119000" expanded="true" signature="3905:3934" placeholder="select MAX(l... logTable" />
+            <marker date="1496632119000" expanded="true" signature="4748:4777" placeholder="select MAX(l... logTable" />
+            <marker date="1496632119000" expanded="true" signature="6030:6050" placeholder="INSERT INTO logTable... " />
+            <marker date="1496632119000" expanded="true" signature="6030:6170" placeholder="INSERT INTO logTable... " />
+            <marker date="1496632119000" expanded="true" signature="7719:7805" placeholder="select MAX(l... logTable" />
+            <marker date="1496632119000" expanded="true" signature="7719:7817" placeholder="select txid,... logTable" />
+            <marker date="1496632119000" expanded="true" signature="9808:9906" placeholder="select txid,... logTable" />
+            <marker date="1496632119000" expanded="true" signature="11976:12114" placeholder="select lsn, logTable" />
+            <marker date="1496632119000" expanded="true" signature="11976:12134" placeholder="select lsn, logTable" />
+            <marker date="1496632119000" expanded="true" signature="14241:14366" placeholder="select lsn, logTable" />
+            <marker date="1496632119000" expanded="true" signature="16360:16394" placeholder="DELETE from " />
+            <marker date="1496632119000" expanded="true" signature="16366:16394" placeholder="select txid,... logTable" />
+            <marker date="1496632119000" expanded="true" signature="16866:16901" placeholder="DELETE from " />
+            <marker date="1496632119000" expanded="true" signature="17400:17442" placeholder="DELETE from " />
+            <marker date="1496632119000" expanded="true" signature="17400:17462" placeholder="DELETE from " />
+            <marker date="1496632119000" expanded="true" signature="17978:18005" placeholder="DELETE from " />
+            <marker date="1496632119000" expanded="true" signature="17978:18017" placeholder="DELETE from " />
+            <marker date="1496632119000" expanded="true" signature="19416:19553" placeholder="INSERT INTO missingValue... " />
+            <marker date="1496632119000" expanded="true" signature="19416:19560" placeholder="INSERT INTO missingValue... " />
+            <marker date="1496632119000" expanded="true" signature="19416:19578" placeholder="INSERT INTO employeeLog... " />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/LoggingService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="149" column="0" selection-start-line="149" selection-start-column="0" selection-end-line="149" selection-end-column="0" />
+        <state relative-caret-position="234">
+          <caret line="329" column="45" selection-start-line="329" selection-start-column="45" selection-end-line="329" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1729#1730#0" expanded="true" />
-            <element signature="e#1774#1775#0" expanded="true" />
+            <element signature="e#1840#1841#0" expanded="true" />
+            <element signature="e#1885#1886#0" expanded="true" />
+            <element signature="e#5374#5387#0" expanded="true" />
+            <element signature="e#5754#5767#0" expanded="true" />
+            <element signature="e#6162#6175#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/geode/TransactionRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="62" column="8" selection-start-line="62" selection-start-column="8" selection-end-line="73" selection-end-column="35" />
+        <state relative-caret-position="294">
+          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#662#663#0" expanded="true" />
+            <element signature="e#714#715#0" expanded="true" />
           </folding>
         </state>
       </provider>

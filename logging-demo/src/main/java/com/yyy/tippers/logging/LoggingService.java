@@ -8,13 +8,16 @@ package com.yyy.tippers.logging;
 import com.google.inject.Inject;
 import com.yyy.tippers.logging.db.DbService;
 import com.yyy.tippers.logging.entity.Payload;
-import com.yyy.tippers.logging.factory.Handlerable;
 import com.yyy.tippers.logging.factory.HandlerFactory;
+import com.yyy.tippers.logging.factory.Handlerable;
+import com.yyy.tippers.logging.geode.TransactionRepository;
 import com.yyy.tippers.logging.utils.Transaction;
 import com.yyy.tippers.logging.utils.TransactionEntry;
 import com.yyy.tippers.logging.utils.TransactionLog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoggingService {
@@ -141,13 +144,184 @@ public class LoggingService {
         }
     }
 
-    public int flushLog(int lsn) {
-        /*
-          Although, we are not sure about in-mem DB APIs yet. I will update this before next Monday.
-          Todo: YueDing -> Build connection between in-mem DB and local DB, code resides in db package.
-         */
+    public Transaction queryLogByLsn(int lsn) {
 
-        Transaction tx = dbService.getTransactionRepository().findByLsn(lsn);
+        Transaction tx = null;
+
+        // first search from geode
+        tx = dbService.getTransactionRepository().findByLsn(lsn);
+
+        // if not in geode, search in mysql
+        if (tx == null) {
+            tx = dbService.getTxByLsnInMysql(lsn);
+        }
+
+        return tx;
+    }
+
+    public List<Transaction> queryLogListByTxid(int txid) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        //frist search geode
+        txList.addAll(dbService.getTransactionRepository().findByTxid(txid));
+
+        //second search mysql
+        txList.addAll(dbService.getTxByTxidInMysql(txid));
+
+        return txList;
+    }
+
+    public List<Transaction> queryLogListByTimeInterval(int beginTime, int endTime) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        //first search geode
+        txList.addAll(dbService.getTransactionRepository().findByTimeInterval(beginTime, endTime));
+
+        //second search mysql
+        txList.addAll(dbService.getTxByTimeIntervalInMysql(beginTime, endTime));
+
+        return txList;
+    }
+
+    public List<Transaction> queryLogListByLogType(String log_Type) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        //first search geode
+        txList.addAll(dbService.getTransactionRepository().findByLog_typeIgnoreCase(log_Type));
+
+        //second search mysql
+        txList.addAll(dbService.getTxByLogTypeInMysql(log_Type));
+
+        return txList;
+    }
+
+    public int deleteLogByLsn(int lsn) {
+        int count = 0;
+
+        //first delete in geode
+        TransactionRepository transactionRepository = dbService.getTransactionRepository();
+
+        Transaction tx = transactionRepository.findByLsn(lsn);
+        if (tx != null) {
+            transactionRepository.delete(tx);
+
+            Transaction prevTx = tx.getPrev();
+            Transaction nextTx = tx.getNext();
+
+            if (prevTx != null) {
+                prevTx.setNext(nextTx);
+            }
+
+            if (nextTx != null) {
+                nextTx.setPrev(prevTx);
+            }
+            return 1;
+        }
+
+        //delete in mysql
+        count = dbService.deleteLogByLsnInMysql(lsn);
+
+        return count;
+    }
+
+    public int deleteLogsByTxid(int txid) {
+        int count = 0;
+
+        //delete in geode
+        TransactionRepository transactionRepository = dbService.getTransactionRepository();
+
+        List<Transaction> transactions = (List<Transaction>)transactionRepository.findByTxid(txid);
+
+        for (Transaction tx : transactions) {
+            transactionRepository.delete(tx);
+
+            Transaction prevTx = tx.getPrev();
+            Transaction nextTx = tx.getNext();
+
+            if (prevTx != null) {
+                prevTx.setNext(nextTx);
+            }
+
+            if (nextTx != null) {
+                nextTx.setPrev(prevTx);
+            }
+        }
+        count += transactions.size();
+
+        //delete in mysql
+        count += dbService.deleteLogsByTxidInMysql(txid);
+
+        return count;
+    }
+
+    public int deleteLogsByTimeInterval(int beginTime, int endTime) {
+        int count = 0;
+
+        //delete in geode
+        TransactionRepository transactionRepository = dbService.getTransactionRepository();
+
+        List<Transaction> transactions = (List<Transaction>)transactionRepository.findByTimeInterval(beginTime, endTime);
+
+        for (Transaction tx : transactions) {
+            transactionRepository.delete(tx);
+
+            Transaction prevTx = tx.getPrev();
+            Transaction nextTx = tx.getNext();
+
+            if (prevTx != null) {
+                prevTx.setNext(nextTx);
+            }
+
+            if (nextTx != null) {
+                nextTx.setPrev(prevTx);
+            }
+        }
+        count += transactions.size();
+
+        //delete in mysql
+        count += dbService.deleteLogsByTimeIntervalInMysql(beginTime, endTime);
+
+        return count;
+    }
+
+    public int deleteLogsByLogType(String log_type) {
+        int count = 0;
+
+        //delete in geode
+        TransactionRepository transactionRepository = dbService.getTransactionRepository();
+
+        List<Transaction> transactions = (List<Transaction>)transactionRepository.findByLog_typeIgnoreCase(log_type);
+
+        for (Transaction tx : transactions) {
+            transactionRepository.delete(tx);
+
+            Transaction prevTx = tx.getPrev();
+            Transaction nextTx = tx.getNext();
+
+            if (prevTx != null) {
+                prevTx.setNext(nextTx);
+            }
+
+            if (nextTx != null) {
+                nextTx.setPrev(prevTx);
+            }
+        }
+        count += transactions.size();
+
+        //delete in mysql
+        count += dbService.deleteLogsByLogType(log_type);
+
+        return count;
+    }
+
+    /*
+       flushes the log upto given LSN to the disk, atomically
+
+    */
+    public synchronized int flushLog(int lsn) {
+
+        //List<Transaction> deletedLogs = (List<Transaction>)dbService.getTransactionRepository().findByLsnLessThanEqual(lsn);
+        Transaction tx = dbService.getTransactionRepository().findByLsnLessThanEqual(lsn);
 
         Transaction curTx = tx;
 
@@ -161,8 +335,12 @@ public class LoggingService {
 
             curTx = curTx.getPrev();
         }
-
-
+        if (tx != null) {
+            Transaction nextTx = tx.getNext();
+            if (nextTx != null) {
+                nextTx.setPrev(null);
+            }
+        }
 
         System.out.println("flush successful!");
         return 0;

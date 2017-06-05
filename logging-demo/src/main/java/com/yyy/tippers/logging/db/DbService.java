@@ -10,10 +10,15 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yue on 5/4/17.
@@ -200,36 +205,37 @@ public class DbService {
         PreparedStatement ps = null;
 
         try {
-            ps = conn.prepareStatement("INSERT INTO logTable(lsn, txid, time_stamp, log_type, payload, payload_binary) " +
-                    "VALUES (?,?,?,?,?,?)");
+            ps = conn.prepareStatement("INSERT INTO logTable(lsn, txid, time_stamp, log_type, payload_type, payload, payload_binary) " +
+                    "VALUES (?,?,?,?,?,?,?)");
 
             ps.setInt(1, tx.getLsn());
             ps.setInt(2, tx.getTxid());
-            ps.setInt(3, tx.getTimestamp());
-            ps.setString(4, tx.getType());
+            ps.setInt(3, tx.getTime_stamp());
+            ps.setString(4, tx.getLog_type());
 
             Payload payload = tx.getPayload();
+            ps.setString(5, payload.getType());
 
             if (payload.getType().equals("Binary")) {
 
                 byte[] payload_bytes = payload.getBinaryContent().getBytes();
                 ByteArrayInputStream byteIS = new ByteArrayInputStream(payload_bytes);
 
-                ps.setString(5, null);
-                ps.setBinaryStream(6, byteIS, payload_bytes.length);
+                ps.setString(6, null);
+                ps.setBinaryStream(7, byteIS, payload_bytes.length);
 
             }else if (payload.getType().equals("XML")){
-                ps.setString(5, payload.getXmlContent());
-                ps.setBinaryStream(6, null);
+                ps.setString(6, payload.getXmlContent());
+                ps.setBinaryStream(7, null);
 
             }else if (payload.getType().equals("JSON")){
                 // TODO: JSON
-                ps.setString(5, payload.getJsonContent());
-                ps.setBinaryStream(6, null);
+                ps.setString(6, payload.getJsonContent());
+                ps.setBinaryStream(7, null);
 
             }else if (payload.getType().equals("Plaintxt")){
-                ps.setString(5, payload.getTxtContent());
-                ps.setBinaryStream(6, null);
+                ps.setString(6, payload.getTxtContent());
+                ps.setBinaryStream(7, null);
 
             }
 
@@ -240,6 +246,336 @@ public class DbService {
         } finally {
             DataSourceUtils.releaseConnection(conn, ds);
         }
+    }
+
+    public Transaction getTxByLsnInMysql(int lsn) {
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        Transaction tx = null;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("select txid, time_stamp, log_type, payload_type, payload, payload_binary from logTable where lsn=?");
+
+            ps.setInt(1, lsn);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                tx = new Transaction();
+                tx.setLsn(lsn);
+                tx.setTxid(rs.getInt("txid"));
+                tx.setTime_stamp(rs.getInt("time_stamp"));
+                tx.setLog_type(rs.getString("log_type"));
+
+                Payload payload = new Payload();
+                payload.setType(rs.getString("payload_type"));
+
+                if (payload.getType().equals("XML")) {
+                    payload.setXmlContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("JSON")) {
+                    // TODO: JSON
+                    payload.setJsonContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Plaintxt")) {
+                    payload.setTxtContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Binary")) {
+                    InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    int i = -1;
+
+                    try {
+                        while((i = is.read())!=-1){
+                            baos.write(i);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    payload.setBinaryContent(baos.toString());
+                }
+
+                tx.setPayload(payload);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+        return tx;
+    }
+
+    public List<Transaction> getTxByTxidInMysql(int txid) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("select lsn, time_stamp, log_type, payload_type, payload, payload_binary from logTable where txid=?");
+
+            ps.setInt(1, txid);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Transaction tx = new Transaction();
+                tx.setLsn(rs.getInt("lsn"));
+                tx.setTxid(txid);
+                tx.setTime_stamp(rs.getInt("time_stamp"));
+                tx.setLog_type(rs.getString("log_type"));
+
+                Payload payload = new Payload();
+                payload.setType(rs.getString("payload_type"));
+
+                if (payload.getType().equals("XML")) {
+                    payload.setXmlContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("JSON")) {
+                    // TODO: JSON
+                    payload.setJsonContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Plaintxt")) {
+                    payload.setTxtContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Binary")) {
+                    InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    int i = -1;
+
+                    try {
+                        while((i = is.read())!=-1){
+                            baos.write(i);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    payload.setBinaryContent(baos.toString());
+                }
+                tx.setPayload(payload);
+
+                txList.add(tx);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return txList;
+    }
+
+    public List<Transaction> getTxByTimeIntervalInMysql(int beginTime, int endTime) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("select lsn, txid, time_stamp, log_type, payload_type, payload, " +
+                    "payload_binary from logTable where time_stamp >= ? AND time_stamp <= ?");
+
+            ps.setInt(1, beginTime);
+            ps.setInt(2, endTime);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Transaction tx = new Transaction();
+                tx.setLsn(rs.getInt("lsn"));
+                tx.setTxid(rs.getInt("txid"));
+                tx.setTime_stamp(rs.getInt("time_stamp"));
+                tx.setLog_type(rs.getString("log_type"));
+
+                Payload payload = new Payload();
+                payload.setType(rs.getString("payload_type"));
+
+                if (payload.getType().equals("XML")) {
+                    payload.setXmlContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("JSON")) {
+                    // TODO: JSON
+                    payload.setJsonContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Plaintxt")) {
+                    payload.setTxtContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Binary")) {
+                    InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    int i = -1;
+
+                    try {
+                        while((i = is.read())!=-1){
+                            baos.write(i);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    payload.setBinaryContent(baos.toString());
+                }
+                tx.setPayload(payload);
+
+                txList.add(tx);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return txList;
+    }
+
+    public List<Transaction> getTxByLogTypeInMysql(String log_type) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("select lsn, txid, time_stamp, payload_type, payload, " +
+                    "payload_binary from logTable where log_type = ?");
+
+            ps.setString(1, log_type);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Transaction tx = new Transaction();
+                tx.setLsn(rs.getInt("lsn"));
+                tx.setTxid(rs.getInt("txid"));
+                tx.setTime_stamp(rs.getInt("time_stamp"));
+                tx.setLog_type(log_type);
+
+                Payload payload = new Payload();
+                payload.setType(rs.getString("payload_type"));
+
+                if (payload.getType().equals("XML")) {
+                    payload.setXmlContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("JSON")) {
+                    // TODO: JSON
+                    payload.setJsonContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Plaintxt")) {
+                    payload.setTxtContent(rs.getString("payload"));
+
+                }else if (payload.getType().equals("Binary")) {
+                    InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    int i = -1;
+
+                    try {
+                        while((i = is.read())!=-1){
+                            baos.write(i);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    payload.setBinaryContent(baos.toString());
+                }
+                tx.setPayload(payload);
+
+                txList.add(tx);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return txList;
+    }
+
+    public int deleteLogByLsnInMysql(int lsn) {
+        int count = 0;
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE from logTable where lsn = ?");
+
+            ps.setInt(1, lsn);
+
+            count = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return count;
+    }
+
+    public int deleteLogsByTxidInMysql(int txid) {
+        int count = 0;
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE from logTable where txid = ?");
+
+            ps.setInt(1, txid);
+
+            count = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return count;
+    }
+
+    public int deleteLogsByTimeIntervalInMysql(int beginTime, int endTime) {
+        int count = 0;
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE from logTable where time_stamp >= ? and time_stamp <= ?");
+
+            ps.setInt(1, beginTime);
+            ps.setInt(2, endTime);
+
+            count = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return count;
+    }
+
+    public int deleteLogsByLogType(String log_type) {
+        int count = 0;
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE from logTable where log_type = ?");
+
+            ps.setString(1, log_type);
+
+            count = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return count;
     }
 
     /*

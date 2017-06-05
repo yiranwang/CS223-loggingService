@@ -4,10 +4,7 @@ package com.yyy.tippers.logging.geode;
  * Created by yiranwang on 5/3/17.
  */
 
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import com.gemstone.gemfire.cache.GemFireCache;
 import com.yyy.tippers.logging.utils.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +14,10 @@ import org.springframework.data.gemfire.CacheFactoryBean;
 import org.springframework.data.gemfire.LocalRegionFactoryBean;
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
 
-import com.gemstone.gemfire.cache.GemFireCache;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 // this class is used to start the Geode and create a region named "hello" to store the Transaction
@@ -58,7 +58,7 @@ public class Application implements CommandLineRunner{
 
 
     public void run(String... strings) throws Exception {
-        List<Transaction> list = TransactionRepository.findAll();
+        List<Transaction> list = new ArrayList<Transaction>();
         System.out.println("start to a new region, and the current region size is:" + list.size());
 
     }

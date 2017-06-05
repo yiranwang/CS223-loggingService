@@ -38,40 +38,45 @@ public class Demo
 
         String format = "XML";
 
-        int timestamp = 0;
+        int timestamp = 1;
         String type = "Database Log";
 
         Payload payload = new Payload();
         payload.setType("XML");
 
         payload.setXmlContent(Constant.xmlContent1);
-        loggingService.writeLog(txid, timestamp, type, payload);
+        loggingService.writeLog(txid, timestamp++, type, payload);
 
         payload.setXmlContent(Constant.xmlContent2);
-        loggingService.writeLog(txid, timestamp, type, payload);
+        loggingService.writeLog(txid, timestamp++, type, payload);
 
         payload.setXmlContent(Constant.xmlContent3);
-        loggingService.writeLog(txid, timestamp, type, payload);
+        loggingService.writeLog(txid, timestamp++, type, payload);
 
-        loggingService.queryLog(txid); // implement this first
 //        loggingService.queryLog(txid, lsn); // this one later
 
 //        loggingService.writeLog(txid, "JSON_content", "JSON"); // for dependency injection testing only
 
         loggingService.flushLog(3);
 
+        //int testTx = loggingService.deleteLogsByLogType("Database Log");
+
         // test the second transaction, containing 3 logs
         txid = loggingService.newTransaction();
 
         payload.setXmlContent(Constant.xmlContent1);
-        loggingService.writeLog(txid, timestamp, type, payload);
+        loggingService.writeLog(txid, timestamp++, type, payload);
 
         payload.setXmlContent(Constant.xmlContent2);
-        loggingService.writeLog(txid, timestamp, type, payload);
+        loggingService.writeLog(txid, timestamp++, type, payload);
 
         payload.setXmlContent(Constant.xmlContent3);
-        loggingService.writeLog(txid, timestamp, type, payload);
+        loggingService.writeLog(txid, timestamp++, type, payload);
+
+        //int testTx = loggingService.deleteLogsByLogType("Database Log");
+
         loggingService.flushLog(6);
+
 
     }
 
