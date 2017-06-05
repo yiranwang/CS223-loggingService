@@ -24,32 +24,22 @@ public class LoggingService {
 
     private final HandlerFactory handlerFactory; // placeholder for the injected
 
-    // for test-purpose only
-    private final Map<Integer, TransactionLog> transactionManager;
-
-//    private DbService dbService = new DbService();
-    private DbService dbService;
+    private DbService dbService; // private DbService dbService = new DbService();
 
     /*
-      This constructor
-      1. binds an HandlerFactory instance with the LoggingService
+      This constructor binds an HandlerFactory instance with the LoggingService
             HandlerFactory was an interface, implemented by "LoggingHandlerFactory" class, which is set to bind "HandlerFactory" in HandlerGuiceModule.java
             Therefore, we can instantiate the "interface" directly here. But it is actually a LoggingHandlerFactory instance.
-      2. init transactionManager
      */
-
     @Inject
     public LoggingService(HandlerFactory handlerFactory) {
         this.handlerFactory = handlerFactory;
-        this.transactionManager = new HashMap<Integer, TransactionLog>(); // for test-purpose only
         this.dbService = new DbService();
     }
 
 
     public int newTransaction() {
-        int txid = dbService.getNextTxid();
-
-        transactionManager.put(txid, new TransactionLog(txid)); // for test-purpose only
+        int txid = dbService.getNextTxid(); // retrieve transaction id from db
         return txid;
     }
 
@@ -88,20 +78,23 @@ public class LoggingService {
       The condition logic is defined in the concrete class - LoggingHandlerFactory.java
      */
 
-    public void writeLog(int txid, int timestamp, String type, Payload payload) {
+    public int writeLog(int txid, int timestamp, String type, Payload payload) {
 
-        /*//get transactionLog from geode according to txid
-        Transaction tx = dbService.getTransactionRepository().findByTxid(txid);*/
+        // get object based on payload type
+        Object object = parseObject(payload);
 
-        //get transactionLog from geode according to largest lsn
+        //get the latest transaction from geode according to largest lsn defined in /geode/TransactionRepository.java
         Transaction prevTx = dbService.getTransactionRepository().findByLargestLsn();
 
         Transaction tx = null;
 
+        /*
+          txid and lsn are two independently maintained integers, monotonically increasing.
+          txid helps to group the logs within the same transaction together.
+          lsn keeps count of how many logs have been written both in Geode as well as in MySQL.
+          Therefore, we first look Geode for the current maximum of lsn, and then look into MySQL it is not found in Geode.
+        */
         int lsn = 0;
-
-        // get object based on payload type
-        Object object = parseObject(payload);
 
         // if no transaction in geod, we get the lsn from the largest Lsn number in mysql + 1.
         if(prevTx == null){
@@ -121,27 +114,16 @@ public class LoggingService {
             prevTx.setNext(tx);
         }
 
-        //save current transaction to geode region
+        //.save() comes with Geode; insert current transaction to geode region.
         dbService.getTransactionRepository().save(tx);
 
         System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid));
 
-        // for test-purpose only
-        TransactionLog txlg_test = transactionManager.get(txid);
-        int lsn_test = txlg_test.append(object);
-        System.out.println(String.format("TEST: <LoggingService><writelog> add an entry (lsn_test: %d) into <TransactionLog> (txid: %d)", lsn_test, txid));
+        // int lsn_test = txlg_test.append(object);
+        // System.out.println(String.format("TEST: <LoggingService><writelog> add an entry (lsn_test: %d) into <TransactionLog> (txid: %d)", lsn_test, txid));
 
+        return lsn;
 
-    }
-
-    // this is just for demo purpose!
-    // Not sure where the output goes, we need to discuss the scope of the query method.
-    public void queryLog(int txid) {
-        TransactionEntry entry = transactionManager.get(txid).getFirstEntry();
-        while (entry.hasNext()) {
-            System.out.println(entry.getEntryObject());
-            entry = entry.getNextEntry();
-        }
     }
 
     public Transaction queryLogByLsn(int lsn) {

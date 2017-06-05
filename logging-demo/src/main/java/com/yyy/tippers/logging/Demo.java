@@ -44,38 +44,36 @@ public class Demo
         Payload payload = new Payload();
         payload.setType("XML");
 
+        /* using payload() allows for the segmentation of the logic of unmarshaling the XMLString and the logic of writing the log */
+
+        int lsn;
+
         payload.setXmlContent(Constant.xmlContent1);
-        loggingService.writeLog(txid, timestamp++, type, payload);
+        lsn = loggingService.writeLog(txid, timestamp++, type, payload); // type is not necessary but we are lazy.
 
         payload.setXmlContent(Constant.xmlContent2);
-        loggingService.writeLog(txid, timestamp++, type, payload);
+        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
         payload.setXmlContent(Constant.xmlContent3);
-        loggingService.writeLog(txid, timestamp++, type, payload);
+        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
-//        loggingService.queryLog(txid, lsn); // this one later
-
-//        loggingService.writeLog(txid, "JSON_content", "JSON"); // for dependency injection testing only
-
-        loggingService.flushLog(3);
-
-        //int testTx = loggingService.deleteLogsByLogType("Database Log");
+        loggingService.flushLog(lsn);
 
         // test the second transaction, containing 3 logs
         txid = loggingService.newTransaction();
 
         payload.setXmlContent(Constant.xmlContent1);
-        loggingService.writeLog(txid, timestamp++, type, payload);
+        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
         payload.setXmlContent(Constant.xmlContent2);
-        loggingService.writeLog(txid, timestamp++, type, payload);
+        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
         payload.setXmlContent(Constant.xmlContent3);
-        loggingService.writeLog(txid, timestamp++, type, payload);
+        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
-        //int testTx = loggingService.deleteLogsByLogType("Database Log");
+        loggingService.flushLog(lsn);
 
-        loggingService.flushLog(6);
+        List<Transaction> txls = loggingService.queryLogListByTxid(txid);
 
 
     }
@@ -91,19 +89,11 @@ public class Demo
         System.out.println( "Start..." );
 
         Injector guice = Guice.createInjector(new HandlerGuiceModule());
+
         Demo demo = guice.getInstance(Demo.class);
 
-        /**
-         * Naively start a the Geode to store the transaction.
-         * Yue config it during constructing db.DbService() in LoggingService.java.
-         */
-
-//        SpringApplication geoApp = new SpringApplication(GeodeApplication.class);
-//        geoApp.setWebEnvironment(false);
-//        String input="";
-//        geoApp.run(input);
-
         demo.start();
+
         System.out.println( "End." );
 
     }
