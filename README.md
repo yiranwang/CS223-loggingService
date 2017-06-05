@@ -156,6 +156,24 @@ shengnan的更新没有问题，改动的地方有：
 
 ### Transaction Object Interface
 
+### Table Creation in Mysql
+SQL (in schema: CS223-loggingService):
+(1)Create Schema:
+CREATE SCHEMA 'new_schema' ;
+-----------------------------------------
+(2)Create Table:
+CREATE TABLE 'CS223-loggingService'.'logTable' (
+  'lsn' INT NOT NULL,
+  'txid' INT NOT NULL,
+  'time_stamp' INT NULL,
+  'log_type' VARCHAR(45) NULL,
+  'payload_type' VARCHAR(45) NULL,
+  'payload' LONGTEXT NULL,
+  'payload_binary' BLOB NULL,
+  PRIMARY KEY ('lsn'));
+
+
+
 __LastUpdate: 05032017__  
 
 ``` java
