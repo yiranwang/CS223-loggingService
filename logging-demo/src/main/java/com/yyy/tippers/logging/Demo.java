@@ -4,9 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.yyy.tippers.logging.entity.Payload;
-import com.yyy.tippers.logging.utils.Transaction;
-
-import java.util.List;
 
 
 /**
@@ -51,13 +48,13 @@ public class Demo
 
         int lsn;
 
-        payload.setXmlContent(Constant.xmlContent1);
+        payload.setContent(Constant.xmlContent1);
         lsn = loggingService.writeLog(txid, timestamp++, type, payload); // type is not necessary but we are lazy.
 
-        payload.setXmlContent(Constant.xmlContent2);
+        payload.setContent(Constant.xmlContent2);
         lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
-        payload.setXmlContent(Constant.xmlContent3);
+        payload.setContent(Constant.xmlContent3);
         lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
         loggingService.flushLog(lsn);
@@ -65,19 +62,19 @@ public class Demo
         // test the second transaction, containing 3 logs
         txid = loggingService.newTransaction();
 
-        payload.setXmlContent(Constant.xmlContent1);
+        payload.setContent(Constant.xmlContent1);
         lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
-        payload.setXmlContent(Constant.xmlContent2);
+        payload.setContent(Constant.xmlContent2);
         lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
-        payload.setXmlContent(Constant.xmlContent3);
+        payload.setContent(Constant.xmlContent3);
         lsn = loggingService.writeLog(txid, timestamp++, type, payload);
+
+        //List<Transaction> txls = loggingService.queryLogListByPayload("employee", "firstname", "vimal");
+        //nt count = loggingService.deleteLogsByPayload("employee", "firstname", "vimal");
 
         loggingService.flushLog(lsn);
-
-        List<Transaction> txls = loggingService.queryLogListByTxid(txid);
-
 
     }
 

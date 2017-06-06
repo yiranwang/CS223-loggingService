@@ -12,13 +12,9 @@ import com.yyy.tippers.logging.factory.HandlerFactory;
 import com.yyy.tippers.logging.factory.Handlerable;
 import com.yyy.tippers.logging.geode.TransactionRepository;
 import com.yyy.tippers.logging.utils.Transaction;
-import com.yyy.tippers.logging.utils.TransactionEntry;
-import com.yyy.tippers.logging.utils.TransactionLog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LoggingService {
 
@@ -56,20 +52,20 @@ public class LoggingService {
             Handlerable handler = handlerFactory.getHandler("XML");
 
             // unmarshal the input - content into log entry object
-            object = handler.parse(payload.getXmlContent());
+            object = handler.parse(payload.getContent());
 
         }else if (payload.getType().equals("JSON")) {
             // with runtime input - format, generate specific and concrete handler.
             Handlerable handler = handlerFactory.getHandler("JSON");
 
             // unmarshal the input - content into log entry object
-            object = handler.parse(payload.getXmlContent());
+            object = handler.parse(payload.getContent());
 
         }else if (payload.getType().equals("Plaintxt")) {
-            object = payload.getTxtContent();
+            object = payload.getContent();
 
         }else if (payload.getType().equals("Binary")) {
-            byte[] payload_bytes = payload.getBinaryContent().getBytes();
+            byte[] payload_bytes = payload.getContent().getBytes();
             object = payload_bytes;
         }
 
@@ -109,7 +105,7 @@ public class LoggingService {
             lsn = prevTx.getLsn() + 1;
         }
 
-        tx = new Transaction(lsn, txid, timestamp, type, payload, object);
+        tx = new Transaction(lsn, txid, timestamp, type, payload.getType(), payload.getContent(), object);
 
         //set prev transaction's next pointer and current transaction's prev pointer
         tx.setPrev(prevTx);
@@ -177,6 +173,20 @@ public class LoggingService {
 
         //second search mysql
         txList.addAll(dbService.getTxByLogTypeInMysql(log_Type));
+
+        return txList;
+    }
+
+    public List<Transaction> queryLogListByPayload(String className, String attribute, String value) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        String queryPara = "%" + className + "%<" + attribute + ">" + value + "</" + attribute + ">%";
+
+        //first search geode
+        txList.addAll(dbService.getTransactionRepository().findByPayload(queryPara));
+
+        //second search mysql
+        txList.addAll(dbService.getTxByPayloadInMysql(queryPara));
 
         return txList;
     }
@@ -300,6 +310,38 @@ public class LoggingService {
         return count;
     }
 
+    public int deleteLogsByPayload(String className, String attribute, String value) {
+        String queryPara = "%" + className + "%<" + attribute + ">" + value + "</" + attribute + ">%";
+
+        int count = 0;
+
+        //delete in geode
+        TransactionRepository transactionRepository = dbService.getTransactionRepository();
+
+        List<Transaction> transactions = (List<Transaction>)transactionRepository.findByPayload(queryPara);
+
+        for (Transaction tx : transactions) {
+            transactionRepository.delete(tx);
+
+            Transaction prevTx = tx.getPrev();
+            Transaction nextTx = tx.getNext();
+
+            if (prevTx != null) {
+                prevTx.setNext(nextTx);
+            }
+
+            if (nextTx != null) {
+                nextTx.setPrev(prevTx);
+            }
+        }
+        count += transactions.size();
+
+        //delete in mysql
+        count += dbService.deleteLogsByPayload(queryPara);
+
+        return count;
+    }
+
     /*
        flushes the log upto given LSN to the disk, atomically
 
@@ -311,24 +353,33 @@ public class LoggingService {
 
         Transaction curTx = tx;
 
-        while (curTx != null) {
+        // batch save txs to disk
+        int result = dbService.saveLogToDb(curTx);
 
-            //save curTx to external database
-            dbService.saveLogToDb(curTx);
+        if (result == 0) { //save to disk successfully!
+            curTx = tx;
 
-            //remove curTx from geode
-            dbService.getTransactionRepository().delete(curTx);
+            while (curTx != null) {
 
-            curTx = curTx.getPrev();
-        }
-        if (tx != null) {
-            Transaction nextTx = tx.getNext();
-            if (nextTx != null) {
-                nextTx.setPrev(null);
+                //remove curTx from geode
+                dbService.getTransactionRepository().delete(curTx);
+
+                curTx = curTx.getPrev();
             }
+            if (tx != null) {
+                Transaction nextTx = tx.getNext();
+                if (nextTx != null) {
+                    nextTx.setPrev(null);
+                }
+            }
+
+            System.out.println("flush successful!");
+            return 0;
+
+        }else {
+            System.out.println("flush not successful!");
+            return -1;
         }
 
-        System.out.println("flush successful!");
-        return 0;
     }
 }

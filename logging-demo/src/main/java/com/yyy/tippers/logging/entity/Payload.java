@@ -5,10 +5,7 @@ package com.yyy.tippers.logging.entity;
  */
 public class Payload {
     private String type; //XML, JSON, Plaintxt, Binary
-    private String xmlContent;
-    private String jsonContent; // should import Json libarary
-    private String txtContent;
-    private String binaryContent;
+    private String content;
 
     public Payload() {
     }
@@ -21,35 +18,11 @@ public class Payload {
         this.type = type;
     }
 
-    public String getXmlContent() {
-        return xmlContent;
+    public String getContent() {
+        return content;
     }
 
-    public void setXmlContent(String xmlContent) {
-        this.xmlContent = xmlContent;
-    }
-
-    public String getJsonContent() {
-        return jsonContent;
-    }
-
-    public void setJsonContent(String jsonContent) {
-        this.jsonContent = jsonContent;
-    }
-
-    public String getTxtContent() {
-        return txtContent;
-    }
-
-    public void setTxtContent(String txtContent) {
-        this.txtContent = txtContent;
-    }
-
-    public String getBinaryContent() {
-        return binaryContent;
-    }
-
-    public void setBinaryContent(String binaryContent) {
-        this.binaryContent = binaryContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

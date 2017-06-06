@@ -22,6 +22,9 @@ public interface TransactionRepository extends CrudRepository<Transaction, Integ
     @Query("SELECT DISTINCT * From /logRegion where lsn <= $1 ORDER BY lsn desc limit 1")
     Transaction findByLsnLessThanEqual(int lsn);
 
+    @Query("SELECT DISTINCT * From /logRegion where payload LIKE $1")
+    Collection<Transaction> findByPayload(String queryPara);
+
     Collection<Transaction> findAll();
 
 //    @Query("select MAX(txid) from /Transaction")

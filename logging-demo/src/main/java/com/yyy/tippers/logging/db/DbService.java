@@ -1,7 +1,6 @@
 package com.yyy.tippers.logging.db;
 
 import com.gemstone.gemfire.cache.Region;
-import com.yyy.tippers.logging.entity.Payload;
 import com.yyy.tippers.logging.geode.TransactionRepository;
 import com.yyy.tippers.logging.utils.Transaction;
 import org.springframework.context.ApplicationContext;
@@ -193,53 +192,91 @@ public class DbService {
 
     /*
     * attributes in logtable: lsn, txid, time_stamp, log_type(varchar), payload(varchar), payload_binary(BLOB)
+    * batch insert, if error happens during execution, rollback
     * */
-    public void saveLogToDb(Transaction tx) {
+    public int saveLogToDb(Transaction tx) {
         Connection conn = DataSourceUtils.getConnection(ds);
         PreparedStatement ps = null;
 
+        int result = 0;
+
+        String sql = "INSERT INTO logTable(lsn, txid, time_stamp, log_type, payload_type, payload, payload_binary) " +
+                "VALUES (?,?,?,?,?,?,?)";
+
         try {
-            ps = conn.prepareStatement("INSERT INTO logTable(lsn, txid, time_stamp, log_type, payload_type, payload, payload_binary) " +
-                    "VALUES (?,?,?,?,?,?,?)");
+            int count = 0;
+            conn.setAutoCommit(false); // turn off autocommit
 
-            ps.setInt(1, tx.getLsn());
-            ps.setInt(2, tx.getTxid());
-            ps.setInt(3, tx.getTime_stamp());
-            ps.setString(4, tx.getLog_type());
+            ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            Payload payload = tx.getPayload();
-            ps.setString(5, payload.getType());
+            while (tx != null) {
 
-            if (payload.getType().equals("Binary")) {
+                // for test, create an error
+                /*count++;
+                if (count == 2) {
+                    int temp = 1/0;
+                }*/
 
-                byte[] payload_bytes = payload.getBinaryContent().getBytes();
-                ByteArrayInputStream byteIS = new ByteArrayInputStream(payload_bytes);
+                String payload_type = tx.getPayload_type();
 
-                ps.setString(6, null);
-                ps.setBinaryStream(7, byteIS, payload_bytes.length);
+                ps.setInt(1, tx.getLsn());
+                ps.setInt(2, tx.getTxid());
+                ps.setInt(3, tx.getTime_stamp());
+                ps.setString(4, tx.getLog_type());
+                ps.setString(5, payload_type);
 
-            }else if (payload.getType().equals("XML")){
-                ps.setString(6, payload.getXmlContent());
-                ps.setBinaryStream(7, null);
+                if (payload_type.equals("Binary")) {
 
-            }else if (payload.getType().equals("JSON")){
-                // TODO: JSON
-                ps.setString(6, payload.getJsonContent());
-                ps.setBinaryStream(7, null);
+                    byte[] payload_bytes = tx.getPayload().getBytes();
+                    ByteArrayInputStream byteIS = new ByteArrayInputStream(payload_bytes);
 
-            }else if (payload.getType().equals("Plaintxt")){
-                ps.setString(6, payload.getTxtContent());
-                ps.setBinaryStream(7, null);
+                    ps.setString(6, null);
+                    ps.setBinaryStream(7, byteIS, payload_bytes.length);
 
+                }else if (payload_type.equals("XML")){
+                    ps.setString(6, tx.getPayload());
+                    ps.setBinaryStream(7, null);
+
+                }else if (payload_type.equals("JSON")){
+                    // TODO: JSON
+                    ps.setString(6, tx.getPayload());
+                    ps.setBinaryStream(7, null);
+
+                }else if (payload_type.equals("Plaintxt")){
+                    ps.setString(6, tx.getPayload());
+                    ps.setBinaryStream(7, null);
+
+                }
+                ps.addBatch();
+                tx = tx.getPrev();
             }
 
-            ps.executeUpdate();
+            ps.executeBatch();
+            conn.commit();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                    System.out.println("Transaction rollback!!!");
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                    System.out.println("System error!!!");
+                    return -1;
+                } finally {
+                    DataSourceUtils.releaseConnection(conn, ds);
+                }
+            }
+            return -1;
+
         } finally {
-            DataSourceUtils.releaseConnection(conn, ds);
+            if (conn != null) {
+                DataSourceUtils.releaseConnection(conn, ds);
+            }
         }
+        return result;
     }
 
     public Transaction getTxByLsnInMysql(int lsn) {
@@ -261,20 +298,19 @@ public class DbService {
                 tx.setTime_stamp(rs.getInt("time_stamp"));
                 tx.setLog_type(rs.getString("log_type"));
 
-                Payload payload = new Payload();
-                payload.setType(rs.getString("payload_type"));
+                tx.setPayload_type(rs.getString("payload_type"));
 
-                if (payload.getType().equals("XML")) {
-                    payload.setXmlContent(rs.getString("payload"));
+                if (tx.getPayload_type().equals("XML")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("JSON")) {
+                }else if (tx.getPayload_type().equals("JSON")) {
                     // TODO: JSON
-                    payload.setJsonContent(rs.getString("payload"));
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Plaintxt")) {
-                    payload.setTxtContent(rs.getString("payload"));
+                }else if (tx.getPayload_type().equals("Plaintxt")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Binary")) {
+                }else if (tx.getPayload_type().equals("Binary")) {
                     InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -287,10 +323,9 @@ public class DbService {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    payload.setBinaryContent(baos.toString());
+                    tx.setPayload(baos.toString());
                 }
 
-                tx.setPayload(payload);
             }
 
         } catch (SQLException e) {
@@ -320,20 +355,19 @@ public class DbService {
                 tx.setTime_stamp(rs.getInt("time_stamp"));
                 tx.setLog_type(rs.getString("log_type"));
 
-                Payload payload = new Payload();
-                payload.setType(rs.getString("payload_type"));
+                tx.setPayload_type(rs.getString("payload_type"));
 
-                if (payload.getType().equals("XML")) {
-                    payload.setXmlContent(rs.getString("payload"));
+                if (tx.getPayload_type().equals("XML")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("JSON")) {
+                }else if (tx.getPayload_type().equals("JSON")) {
                     // TODO: JSON
-                    payload.setJsonContent(rs.getString("payload"));
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Plaintxt")) {
-                    payload.setTxtContent(rs.getString("payload"));
+                }else if (tx.getPayload_type().equals("Plaintxt")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Binary")) {
+                }else if (tx.getPayload_type().equals("Binary")) {
                     InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -346,9 +380,8 @@ public class DbService {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    payload.setBinaryContent(baos.toString());
+                    tx.setPayload(baos.toString());
                 }
-                tx.setPayload(payload);
 
                 txList.add(tx);
             }
@@ -383,20 +416,19 @@ public class DbService {
                 tx.setTime_stamp(rs.getInt("time_stamp"));
                 tx.setLog_type(rs.getString("log_type"));
 
-                Payload payload = new Payload();
-                payload.setType(rs.getString("payload_type"));
+                tx.setPayload_type(rs.getString("payload_type"));
 
-                if (payload.getType().equals("XML")) {
-                    payload.setXmlContent(rs.getString("payload"));
+                if (tx.getPayload_type().equals("XML")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("JSON")) {
+                }else if (tx.getPayload_type().equals("JSON")) {
                     // TODO: JSON
-                    payload.setJsonContent(rs.getString("payload"));
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Plaintxt")) {
-                    payload.setTxtContent(rs.getString("payload"));
+                }else if (tx.getPayload_type().equals("Plaintxt")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Binary")) {
+                }else if (tx.getPayload_type().equals("Binary")) {
                     InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -409,9 +441,8 @@ public class DbService {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    payload.setBinaryContent(baos.toString());
+                    tx.setPayload(baos.toString());
                 }
-                tx.setPayload(payload);
 
                 txList.add(tx);
             }
@@ -445,20 +476,19 @@ public class DbService {
                 tx.setTime_stamp(rs.getInt("time_stamp"));
                 tx.setLog_type(log_type);
 
-                Payload payload = new Payload();
-                payload.setType(rs.getString("payload_type"));
+                tx.setPayload_type(rs.getString("payload_type"));
 
-                if (payload.getType().equals("XML")) {
-                    payload.setXmlContent(rs.getString("payload"));
+                if (tx.getPayload_type().equals("XML")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("JSON")) {
+                }else if (tx.getPayload_type().equals("JSON")) {
                     // TODO: JSON
-                    payload.setJsonContent(rs.getString("payload"));
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Plaintxt")) {
-                    payload.setTxtContent(rs.getString("payload"));
+                }else if (tx.getPayload_type().equals("Plaintxt")) {
+                    tx.setPayload(rs.getString("payload"));
 
-                }else if (payload.getType().equals("Binary")) {
+                }else if (tx.getPayload_type().equals("Binary")) {
                     InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -471,9 +501,69 @@ public class DbService {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    payload.setBinaryContent(baos.toString());
+                    tx.setPayload(baos.toString());
                 }
-                tx.setPayload(payload);
+
+                txList.add(tx);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return txList;
+    }
+
+    public List<Transaction> getTxByPayloadInMysql(String queryPara) {
+        List<Transaction> txList = new ArrayList<Transaction>();
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("select lsn, txid, time_stamp, log_type, payload_type, payload, " +
+                    "payload_binary from logTable where payload LIKE ?");
+
+            //String queryPara = "%" + className + "%<" + attribute + ">" + value + "</" + attribute + ">%";
+            ps.setString(1, queryPara);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Transaction tx = new Transaction();
+                tx.setLsn(rs.getInt("lsn"));
+                tx.setTxid(rs.getInt("txid"));
+                tx.setTime_stamp(rs.getInt("time_stamp"));
+                tx.setLog_type(rs.getString("log_type"));
+
+                tx.setPayload_type(rs.getString("payload_type"));
+
+                if (tx.getPayload_type().equals("XML")) {
+                    tx.setPayload(rs.getString("payload"));
+
+                }else if (tx.getPayload_type().equals("JSON")) {
+                    // TODO: JSON
+                    tx.setPayload(rs.getString("payload"));
+
+                }else if (tx.getPayload_type().equals("Plaintxt")) {
+                    tx.setPayload(rs.getString("payload"));
+
+                }else if (tx.getPayload_type().equals("Binary")) {
+                    InputStream is = rs.getBinaryStream(rs.getString("payload_binary"));
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    int i = -1;
+
+                    try {
+                        while((i = is.read())!=-1){
+                            baos.write(i);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    tx.setPayload(baos.toString());
+                }
 
                 txList.add(tx);
             }
@@ -560,6 +650,27 @@ public class DbService {
             PreparedStatement ps = conn.prepareStatement("DELETE from logTable where log_type = ?");
 
             ps.setString(1, log_type);
+
+            count = ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DataSourceUtils.releaseConnection(conn, ds);
+        }
+
+        return count;
+    }
+
+    public int deleteLogsByPayload(String queryPara) {
+        int count = 0;
+
+        Connection conn = DataSourceUtils.getConnection(ds);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE from logTable where payload LIKE ?");
+
+            ps.setString(1, queryPara);
 
             count = ps.executeUpdate();
 
