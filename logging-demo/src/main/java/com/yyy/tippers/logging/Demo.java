@@ -4,6 +4,9 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.yyy.tippers.logging.entity.Payload;
+import com.yyy.tippers.logging.utils.Transaction;
+
+import java.util.List;
 
 
 /**

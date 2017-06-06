@@ -59,7 +59,11 @@ public class LoggingService {
             object = handler.parse(payload.getXmlContent());
 
         }else if (payload.getType().equals("JSON")) {
-            // TODO: JSON
+            // with runtime input - format, generate specific and concrete handler.
+            Handlerable handler = handlerFactory.getHandler("JSON");
+
+            // unmarshal the input - content into log entry object
+            object = handler.parse(payload.getXmlContent());
 
         }else if (payload.getType().equals("Plaintxt")) {
             object = payload.getTxtContent();
