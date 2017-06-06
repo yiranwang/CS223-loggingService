@@ -108,12 +108,6 @@ public class DbService {
 
         int finalTxid = largestTxid + 1;
 
-        /*// add the new Transaction to the Geode region
-        if(!isInGeode){
-            Transaction newTransaction = new Transaction(finalTxid, new TransactionLog(finalTxid));
-            region.put(finalTxid, newTransaction);
-        }*/
-
         return finalTxid;
 
     }

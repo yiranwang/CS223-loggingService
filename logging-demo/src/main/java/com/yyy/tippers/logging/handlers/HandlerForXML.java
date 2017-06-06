@@ -12,9 +12,12 @@ import java.io.ByteArrayInputStream;
 
 
 public class HandlerForXML implements Handlerable {
+    private String className;
 
     @Override
-    public void showType() {
+    public void showType(String className) {
+        this.className = className;
+
         System.out.println("<XML-Handler>");
     }
 

@@ -1,94 +1,108 @@
 # CS223-loggingService
 
+__The project resides in logging-demo dir.__  
+__Please install JVM and MySQL as prerequisite.__  
+__Please refer to <Prepare MySQL table before running app> section below.__  
+__Compile and run /logging-demo/src/main/java/com/yyy/tippers/logging/Demo.java__  
 
-## Proposal
-
-__Team: YYY__
+### Team
 
 Yue Ding  20809476  
 Shengnan Wang 83682456  
 Shayang Zang  36326408  
 
-__Goal:__
+### Goal
 
 This project will implement a logging service accepting logging message in various formats, such as XML, JSON, Plain Text, Binary. We will provide our client with APIs that include “write log into memory”, “delete log” and “flush log onto disk”.
 
 Specifically, we will use:  
 1. Maven to manage the entire project.  
 2. Google Guice to facilitate the building of dependency injection pattern so that different classes, depending on the format of the incoming logging message, can be dynamically loaded.
-3. Apache Geode to manage data in memory.
-4. MySQL/PostgreSQL to manage data on disk.
+3. Apache Geode to manage the in memory storage of the data.
+4. MySQL to store data on disk.
 
 __Procedure Description:__
 
 Client invoke logging handlers through our APIs, corresponding logging message files are first  converted to java beans and then stored in memory. Upon flush, they will go to database.
 
-__Timeline:__
 
-W4: Get ourselves familiar with what each framework/library/package does.  
-W5: Start to build the logging service.  
-W6: Finish the implementation such that our system can work with at least one payload format.  
-W7: Extend it to accept various types of payload format.  
+### APIs
 
+__"loggingService" is a privately attached member of the application.__  
 
-## Tentative APIs
+``` Java
+public app() {
+  // ...
+  private final LoggingService loggingService;
+  // ...
+}
+```
 
-__LastUpdate: 05032017__  
+__Clients initiate the logging of a transaction by calling:__
 
-__"loggingService" is a privately attached member of the application.__
+``` Java
+int txid = loggingService.newTransaction();
+```
 
-Clients initiate the logging of a transaction by calling: __txid = loggingService.newTransaction()__  
+_transaction IDs are a series of monotonically increasing numbers unique to each transaction._  
+
+__Clients write each log into memory by calling:__
+
+``` Java
+int txid = loggingService.newTransaction();
+
+int timestamp = 1;
+
+String type = "XML"
+
+Payload payload = new Payload();
+payload.setType("XML");
+payload.setXmlContent("<some XML content>");
+
+int lsn = loggingService.writeLog(txid, timestamp, type, payload);
+```
 
 Input:  
-* none  
+* txid
+* timestamp
+* type : STRING : xml, json, plain text, binary
+* payload: a wrapper of payload content and its type
 
 Output:  
-* txid : AtomicInteger : transaction ID   
-
-_transaction IDs are a series of monotonically increasing numbers unique to each transaction. Most DBMS has SEQUENCE.nextval() that can generate such numbers._  
-
----
-
-Clients write each log into memory by calling: __loggingService.writeLog(txid, content, format)__  
-
-Input:  
-* txid : AtomicInteger : transaction ID   
-* content : STRING : logging content
-* format : STRING : xml, json, plain text, binary
-
-Current Output:  
-* retcode : INT : 0 indicating success. 1 otherwise.
-
-Potential Output:  
-* lsn : INT : log sequential number
+* lsn : Int : Used in flushLog()
 
 _maintain logs within the same transaction using doubly linkedlist._
 
----
+__Clients flush the logging content from memory to disk by calling:__
 
-Clients query log by calling: __loggingService.queryLog(txid)__  
-
+``` Java
+loggingService.flushLog(lsn);
+// flush all the logs in Geode that has lsn less than given lsn to MySQL and remove them from Geode.
+```
 Input:
-* txid : AtomicInteger : transaction ID
+* lsn
 
 Output:
-* Specific output format hasn't been decided.
+* none
 
----
 
-Clients flush the logging content from memory to disk by calling: __loggingService.flushLog(txid)__  
+__Clients query log by calling:__
 
+``` Java
+List<Transaction> txls = loggingService.queryLogListByTxid(txid);
+// also support query by lsn, timestamp .. etc. Refer to LoggingService.java for implementation details.
+```
 Input:
-* txid : AtomicInteger : transaction ID
+* txid
 
 Output:
-* retcode : INT : 0 indicating success. 1 otherwise.
+* ArrayList<Transaction>
 
 ---
 
 ## Development
 
-### Where to start?
+### Initial Questions
 
 __LastUpdate: 04252017__  
 1. How to generate unique transaction ID and log sequential number using DB.sequence.nextval() in java?
@@ -136,12 +150,7 @@ A "handler" class that implemets Handlerable with specific behavior tailored to 
 
 ...
 
-
-### DB
-
-Yue Ding
-
-### Handlers
+### Unmarshaling with JAXB
 Unmarshall XML to java class. Here, we use two xsds and two xmls(src/main/reources): one is emplyee and the other is shiporder.  
 1. First delete the target/generated-sources/xjc folder. You will generate it later.  
 2. in pom.xml, there is plugin of jaxb to generate the java class from the XSD(schema). Right click pom.xml-->maven-->Reimport. Then Right click pom.xml --> maven--> generate the sources and update folders. After these steps, in target/generated-sources/xjc, you will see the class folders: one is about the employee class, the other is about the shiporder class.  
@@ -154,14 +163,16 @@ shengnan的更新没有问题，改动的地方有：
 3. 在DBService里面，完善了getNextTxid这个method的执行细节。如果Geode里面没有当前transaction，那么就创造一个空的transaction with txid being the max(mysql_largestID, geode_largestID).
 
 
-### Transaction Object Interface
 
-### Table Creation in Mysql
-SQL (in schema: CS223-loggingService):
-(1)Create Schema:
-CREATE SCHEMA 'new_schema' ;
------------------------------------------
-(2)Create Table:
+
+### Prepare MySQL table before running app
+
+```
+SQL (in schema: CS223-loggingService):  
+(1)Create Schema:  
+CREATE SCHEMA 'new_schema' ;  
+-----------------------------------------  
+(2)Create Table:  
 CREATE TABLE 'CS223-loggingService'.'logTable' (
   'lsn' INT NOT NULL,
   'txid' INT NOT NULL,
@@ -171,8 +182,9 @@ CREATE TABLE 'CS223-loggingService'.'logTable' (
   'payload' LONGTEXT NULL,
   'payload_binary' BLOB NULL,
   PRIMARY KEY ('lsn'));
+```
 
-
+### Transaction Object Interface (Discarded.)
 
 __LastUpdate: 05032017__  
 
@@ -215,7 +227,7 @@ What you should be doing is stating a need, "I need something to drink with lunc
 + headers/metadata
 
 
-### Framework
+### Framework Guide
 
 1. [Google Guice](https://en.wikipedia.org/wiki/Google_Guice) is a generic framework for dependency injection using Java annotations.
 
