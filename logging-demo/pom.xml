@@ -137,7 +137,7 @@
               <schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
 
               <schemaIncludes>
-                <Include>*.xsd</Include>
+                <Include>Observation.xsd</Include>
               </schemaIncludes>
               <!--<generateDirectory>${project.basedir}/src/main/data/order</generateDirectory>-->
             </configuration>

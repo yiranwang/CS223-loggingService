@@ -180,14 +180,14 @@ public class LoggingService {
     public List<Transaction> queryLogListByPayload(String className, String attribute, String value) {
         List<Transaction> txList = new ArrayList<Transaction>();
 
-        String queryPara = "%" + className + "%<" + attribute + ">" + value + "</" + attribute + ">%";
+        String queryPara = "%" + className + "%<" + attribute + ">" +"%" + value + "%" + "</" + attribute + ">%";
 
         //first search geode
         txList.addAll(dbService.getTransactionRepository().findByPayload(queryPara));
 
         //second search mysql
         txList.addAll(dbService.getTxByPayloadInMysql(queryPara));
-
+        System.out.println("query result count" + txList.size());
         return txList;
     }
 
@@ -311,7 +311,7 @@ public class LoggingService {
     }
 
     public int deleteLogsByPayload(String className, String attribute, String value) {
-        String queryPara = "%" + className + "%<" + attribute + ">" + value + "</" + attribute + ">%";
+        String queryPara = "%" + className + "%<" + attribute + ">" + "%"+ value +"%"+ "</" + attribute + ">%";
 
         int count = 0;
 

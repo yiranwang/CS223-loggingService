@@ -4,6 +4,10 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.yyy.tippers.logging.entity.Payload;
+import com.yyy.tippers.logging.utils.Transaction;
+
+import java.io.*;
+import java.util.*;
 
 
 /**
@@ -32,49 +36,91 @@ public class Demo
 
     private void start() {
 
-        //get next Txid
-        // test first transaction, containing 3 logs
-        int txid = loggingService.newTransaction();
 
+        // test writelog and flush
+        String path = "/Users/yiranwang/IdeaProjects/gs-accessing-data-gemfire/generateXML/observationXML";
+        List<String> results = new ArrayList<String>();
+
+
+        File[] files = new File(path).listFiles();
+
+        int count = 0;
+        String []  xmlLists = null;
+        int txid = 0;
+        int timestamp = 0;
+        String type = "Observation";
         String format = "XML";
+        Payload payload = null;
+        int lsn = 0;
 
-        int timestamp = 1;
-        String type = "Database Log";
+        for (File file : files) {
+            if(count % 5 == 0){
+                xmlLists = new String[5];
+                xmlLists[count%5] = readFile(file.getAbsolutePath());
+                txid = loggingService.newTransaction();
+                timestamp = count;
+                payload = new Payload();
+                payload.setType(format);
+                payload.setContent(xmlLists[0]);
+                lsn = loggingService.writeLog(txid, timestamp, type, payload);
+            }else{
+                xmlLists[count % 5] = readFile(file.getAbsolutePath());
+                timestamp = count;
+                payload.setContent(xmlLists[count % 5]);
+                lsn = loggingService.writeLog(txid, timestamp, type, payload);
+                if(count % 5 == 4){
+//                    every five xmls is a transaction and flush to my sql
+                    loggingService.flushLog(lsn);
+                }
 
-        Payload payload = new Payload();
-        payload.setType("XML");
+            }
+            count++;
 
-        /* using payload() allows for the segmentation of the logic of unmarshaling the XMLString and the logic of writing the log */
+        }
 
-        int lsn;
 
-        payload.setContent(Constant.xmlContent1);
-        lsn = loggingService.writeLog(txid, timestamp++, type, payload); // type is not necessary but we are lazy.
+        // test query by txid (same with lsn, log_type, timeinterval) and payload
+        List<Transaction> txList = loggingService.queryLogListByTxid(1);
+        System.out.println("the number of logs with txid = 1 is: " + txList.size());
+        for(int i = 0; i < txList.size(); i++){
+            System.out.println(txList.get(i).getPayload());
+        }
 
-        payload.setContent(Constant.xmlContent2);
-        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
+        List<Transaction> txList2 = loggingService.queryLogListByPayload("observation", "payload", "1de67d8c284c2400bca339080147b4edf0c59283");
+        for(int i = 0; i < txList2.size(); i++){
+            System.out.println(txList2.get(i).getPayload());
+        }
 
-        payload.setContent(Constant.xmlContent3);
-        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
+        // test delete
+        int count1 = loggingService.deleteLogsByTxid(1);
+        System.out.println("the number of deleted logs with txid = 1 is: " + count1);
 
-        loggingService.flushLog(lsn);
 
-        // test the second transaction, containing 3 logs
-        txid = loggingService.newTransaction();
 
-        payload.setContent(Constant.xmlContent1);
-        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
 
-        payload.setContent(Constant.xmlContent2);
-        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
+    }
 
-        payload.setContent(Constant.xmlContent3);
-        lsn = loggingService.writeLog(txid, timestamp++, type, payload);
+    public String readFile(String filename) {
+        String result = "";
+        try{
+            InputStream is = new FileInputStream(filename);
+            BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+            String line = buf.readLine();
+            StringBuilder sb = new StringBuilder();
+            while(line != null){
+                sb.append(line);
+                line = buf.readLine();
+                result = sb.toString();
+                //System.out.println("Contents : " + result);
+            }
+//            System.out.println("Contents : " + result);
+            return result;
 
-        //List<Transaction> txls = loggingService.queryLogListByPayload("employee", "firstname", "vimal");
-        //nt count = loggingService.deleteLogsByPayload("employee", "firstname", "vimal");
+        }catch(IOException e){
 
-        loggingService.flushLog(lsn);
+            e.printStackTrace();
+        }
+        return result;
 
     }
 

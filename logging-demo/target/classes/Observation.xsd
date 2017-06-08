@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.observationdata.com"
+           xmlns="http://www.observationdata.com"
+           elementFormDefault="qualified">
+    <xs:element name="observation">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:string"/>
+                <xs:element name="payload" type="xs:string"/>
+                <xs:element name="timestamp" type="xs:string"/>
+                <xs:element name="sensorId" type="xs:string"/>
+                <xs:element name="observationTypeId" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

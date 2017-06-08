@@ -1,12 +1,14 @@
 package com.yyy.tippers.logging.handlers;
 
 import com.javatpoint.Employee;
+import com.observationdata.Observation;
 import com.shiporder.data.Shiporder;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import java.io.StringReader;
+import java.util.Observable;
 
 /**
  * Created by yiranwang on 4/30/17.
@@ -41,6 +43,10 @@ public class UnmarshallXMLClass {
 
             } else if (firstTag.equals("shiporder")) {
                 jaxbContext = JAXBContext.newInstance(Shiporder.class);
+                jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                obj = jaxbUnmarshaller.unmarshal(reader);
+            }else if(firstTag.equals("observation")){
+                jaxbContext = JAXBContext.newInstance(Observation.class);
                 jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 obj = jaxbUnmarshaller.unmarshal(reader);
             }
