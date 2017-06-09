@@ -36,7 +36,7 @@ public class Demo
 
     private void start() {
 
-
+        /*
         // test writelog and flush
         String path = "/Users/yiranwang/IdeaProjects/gs-accessing-data-gemfire/generateXML/observationXML";
         List<String> results = new ArrayList<String>();
@@ -94,8 +94,111 @@ public class Demo
         // test delete
         int count1 = loggingService.deleteLogsByTxid(1);
         System.out.println("the number of deleted logs with txid = 1 is: " + count1);
+        */
+
+        //test infra data and each transaction has 5 logs.
+
+        String infraPath = "/Users/yiranwang/IdeaProjects/CS223-loggingService/other/sample_infra.txt";
+        String firstTag = "<infra>";
+        String newFirstTag = "<?xml version=\"1.0\"?>\n" +
+                "<infra xmlns=\"http://www.infradata.com\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.infradata.com infra.xsd\">\n";
+        ArrayList<String> infraList = getXmlList(infraPath, firstTag, newFirstTag);
+        long startTime = System.nanoTime();
+        testWriteAndFlush(infraList, "Infra", "XML");
+        long endTime = System.nanoTime();
+        long duration1 = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
+
+        // test sensor data and each transactio has 5 logs
+        String sensorPath = "/Users/yiranwang/IdeaProjects/CS223-loggingService/other/sample_sensor.txt";
+        firstTag = "<sensor>";
+        newFirstTag = "<?xml version=\"1.0\"?>\n" +
+                "<sensor xmlns=\"http://www.sensordata.com\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.sensordata.com sensor.xsd\">\n";
+
+        ArrayList<String> sensorList = getXmlList(sensorPath, firstTag, newFirstTag);
+        startTime = System.nanoTime();
+        testWriteAndFlush(sensorList, "Sensor", "XML");
+        endTime = System.nanoTime();
+        long duration2 = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
+
+        System.out.println("total time to flush all "+ infraList.size()+ " logs is: " + duration1 + " milliseconds");
+        System.out.println("total time to flush all "+ sensorList.size()+ " logs is: " + duration2 + " milliseconds");
 
 
+
+
+
+
+    }
+
+    // read xml from files
+    public ArrayList<String> getXmlList(String path, String firstTag, String newFirstTag){
+
+        BufferedReader br = null;
+        String line = "";
+        int count = 0;
+        ArrayList<String> xmlList = new ArrayList<String>();
+        try {
+
+            br = new BufferedReader(new FileReader(path));
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if(line.length() == 0){
+                    continue;
+                }
+                // use comma as separator
+                line = line.replace(firstTag, newFirstTag);
+                xmlList.add(line);
+                System.out.println(line);
+                count++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return xmlList;
+
+    }
+
+
+    public void testWriteAndFlush(ArrayList<String> xmllist, String type, String format){
+        int count = 0;
+        int txid = 0;
+        int timestamp = 0;
+        Payload payload = null;
+        int lsn = 0;
+
+        for(String xmlContent : xmllist){
+            if(count % 5 == 0){
+                txid = loggingService.newTransaction();
+                timestamp = count;
+                payload = new Payload();
+                payload.setType(format);
+                payload.setContent(xmlContent);
+                lsn = loggingService.writeLog(txid, timestamp, type, payload);
+            }else{
+                timestamp = count;
+                payload.setContent(xmlContent);
+                lsn = loggingService.writeLog(txid, timestamp, type, payload);
+                if(count % 5 == 4){
+//                    every five xmls is a transaction and flush to my sql
+                    loggingService.flushLog(lsn);
+                }
+
+            }
+            count++;
+
+
+        }
 
 
     }

@@ -1,7 +1,9 @@
 package com.yyy.tippers.logging.handlers;
 
+import com.infradata.Infra;
 import com.javatpoint.Employee;
 import com.observationdata.Observation;
+import com.sensordata.Sensor;
 import com.shiporder.data.Shiporder;
 
 import javax.xml.bind.JAXBContext;
@@ -49,13 +51,21 @@ public class UnmarshallXMLClass {
                 jaxbContext = JAXBContext.newInstance(Observation.class);
                 jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 obj = jaxbUnmarshaller.unmarshal(reader);
+            }else if(firstTag.equals("infra")){
+                jaxbContext = JAXBContext.newInstance(Infra.class);
+                jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                obj = jaxbUnmarshaller.unmarshal(reader);
+            }else if(firstTag.equals("sensor")){
+                jaxbContext = JAXBContext.newInstance(Sensor.class);
+                jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                obj = jaxbUnmarshaller.unmarshal(reader);
             }
 
         } catch (javax.xml.bind.JAXBException e) {
             e.printStackTrace();
         }
 
-        System.out.println(String.format("<UnmarshallXMLClass><getObject> - unmarshal from xmlContent according to firstTag successful - return obj type: %s", obj.getClass()));
+//        System.out.println(String.format("<UnmarshallXMLClass><getObject> - unmarshal from xmlContent according to firstTag successful - return obj type: %s", obj.getClass()));
         return obj;
     }
 

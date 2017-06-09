@@ -117,7 +117,7 @@ public class LoggingService {
         //.save() comes with Geode; insert current transaction to geode region.
         dbService.getTransactionRepository().save(tx);
 
-        System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid));
+//        System.out.println(String.format("<LoggingService><writelog> add an entry (lsn: %d) into <TransactionLog> (txid: %d)", lsn, txid));
 
         // int lsn_test = txlg_test.append(object);
         // System.out.println(String.format("TEST: <LoggingService><writelog> add an entry (lsn_test: %d) into <TransactionLog> (txid: %d)", lsn_test, txid));
@@ -373,7 +373,7 @@ public class LoggingService {
                 }
             }
 
-            System.out.println("flush successful!");
+//            System.out.println("flush successful!");
             return 0;
 
         }else {

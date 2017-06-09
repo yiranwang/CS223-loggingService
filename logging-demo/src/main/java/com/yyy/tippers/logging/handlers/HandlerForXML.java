@@ -18,7 +18,7 @@ public class HandlerForXML implements Handlerable {
     public void showType(String className) {
         this.className = className;
 
-        System.out.println("<XML-Handler>");
+//        System.out.println("<XML-Handler>");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class HandlerForXML implements Handlerable {
 
         Object obj = unmarshaller.getObject();
 
-        System.out.println(String.format("<HandlerForXML><parse> - retrieved object from unmarshaller successful - $obj class : %s", obj.getClass()));
+//        System.out.println(String.format("<HandlerForXML><parse> - retrieved object from unmarshaller successful - $obj class : %s", obj.getClass()));
 
         return obj;
     }
@@ -62,7 +62,7 @@ public class HandlerForXML implements Handlerable {
             e4.printStackTrace();
         }
 
-        System.out.println(String.format("<HandlerForXML><parseFirstTag> - parsed input string - output - $firstTag : %s", firstTag));
+//        System.out.println(String.format("<HandlerForXML><parseFirstTag> - parsed input string - output - $firstTag : %s", firstTag));
 
         return firstTag;
 
